@@ -19,8 +19,8 @@ if (!apikey) {
 /**
  * Gets the intraday data for a given symbol and time interval from AlphaVantage API directly.
  *
- * @param   {[string]} symbol   represents the stock name (e.g: "IBM")
- * @param   {[string]} interval [allowed values: "1min" | "5min" | "15min" | "30min" | "60min"]
+ * @param   {string} symbol   represents the stock name (e.g: "IBM")
+ * @param   {string} interval [allowed values: "1min" | "5min" | "15min" | "30min" | "60min"]
  * @returns {object}            JavaScript Object
  */
 const getTimeSeriesIntraday = async (symbol, interval) => {
