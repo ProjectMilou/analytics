@@ -1,30 +1,31 @@
 {
-  "name": "analytics",
-  "version": "1.0.0",
-  "description": "Data Analytics module for Project Milou.",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/ProjectMilou/analytics.git"
-  },
-  "keywords": [
-    "analytics"
-  ],
-  "author": "Kristiyan Sakalyan, Marsel Kolovski, Vy Hong",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/ProjectMilou/analytics/issues"
-  },
-  "homepage": "https://github.com/ProjectMilou/analytics#readme",
-  "dependencies": {
-    "axios": "^0.21.1",
-    "dotenv": "^8.2.0",
-    "querystring": "^0.2.1"
-  },
-  "devDependencies": {
-    "prettier": "2.2.1"
-  }
+    "name": "analytics",
+    "version": "1.0.0",
+    "description": "Data Analytics module for Project Milou.",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "node src/index.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/ProjectMilou/analytics.git"
+    },
+    "keywords": [
+        "analytics"
+    ],
+    "author": "Kristiyan Sakalyan, Marsel Kolovski, Vy Hong",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/ProjectMilou/analytics/issues"
+    },
+    "homepage": "https://github.com/ProjectMilou/analytics#readme",
+    "dependencies": {
+        "axios": "^0.21.1",
+        "dotenv": "^8.2.0",
+        "querystring": "^0.2.1"
+    },
+    "devDependencies": {
+        "prettier": "2.2.1"
+    }
 }
