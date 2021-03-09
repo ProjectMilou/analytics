@@ -1,0 +1,64 @@
+{
+    "securities": [
+        {
+            "id": 1804725,
+            "accountId": 1289867,
+            "name": "BASF SE NA O.N.",
+            "isin": "DE000BASF111",
+            "wkn": "BASF11",
+            "quote": 66.82,
+            "quoteCurrency": "EUR",
+            "quoteType": "ACTU",
+            "quoteDate": "2021-02-12 00:00:00.000",
+            "quantityNominal": 4,
+            "quantityNominalType": "UNIT",
+            "marketValue": 267.28,
+            "marketValueCurrency": "EUR",
+            "entryQuote": 66.98,
+            "entryQuoteCurrency": "EUR",
+            "profitOrLoss": null
+        },
+        {
+            "id": 1234,
+            "accountId": 1289867,
+            "name": "Bayer",
+            "isin": "DE000BAY0017",
+            "wkn": "BAY001",
+            "quote": 53.4,
+            "quoteCurrency": "EUR",
+            "quoteType": "ACTU",
+            "quoteDate": "2021-02-12 00:00:00.000",
+            "quantityNominal": 2,
+            "quantityNominalType": "UNIT",
+            "marketValue": 106.8,
+            "marketValueCurrency": "EUR",
+            "entryQuote": 50.18,
+            "entryQuoteCurrency": "EUR",
+            "profitOrLoss": null
+        },
+        {
+            "id": 1234,
+            "accountId": 1289867,
+            "name": "Tesla",
+            "isin": "US88160R1014",
+            "wkn": "A1CX3T",
+            "quote": 509.2,
+            "quoteCurrency": "EUR",
+            "quoteType": "ACTU",
+            "quoteDate": "2021-02-12 00:00:00.000",
+            "quantityNominal": 1,
+            "quantityNominalType": "UNIT",
+            "marketValue": 509.2,
+            "marketValueCurrency": "EUR",
+            "entryQuote": 600.1,
+            "entryQuoteCurrency": "EUR",
+            "profitOrLoss": null
+        }
+    ],
+    "paging": {
+        "page": 1,
+        "perPage": 20,
+        "pageCount": 1,
+        "totalCount": 1
+    }
+}
