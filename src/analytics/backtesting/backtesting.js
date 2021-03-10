@@ -23,11 +23,25 @@ stocksData =
 
 
 */
-
+const namesToSymbols = {
+    Tesla: "TSLA",
+    Bayer: "BAYRY",
+    "BASF SE NA O.N.": "BAS"
+};
 // Step 1: Final Portfolio Balance
 function finalPortfolioBalance(portfolio, stocksData) {}
 
 // Step 2: Max Drawdown
+/*
+    A maximum drawdown (MDD) is the maximum observed loss from a peak to a trough of a portfolio,
+    before a new peak is attained. Maximum drawdown is an indicator of downside risk over a specified
+    time period.
+
+    Maximum Drawdown =  Minimimum Value - Maximum Value  / Maximum Value
+
+
+*/
+
 function maxDrawdown(portfolio, stocksData) {}
 
 // Step 3: Standard Deviation and Sharpe Ratio
