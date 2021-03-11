@@ -22,7 +22,7 @@ async function testDaily() {
 
 async function testWeekly() {
     try {
-        const data = await api.getTimeSeriesWeekly("IBM");
+        const data = await api.getTimeSeriesWeekly("BAYRY");
         console.log(data);
     } catch (err) {
         console.log(err);
@@ -49,7 +49,7 @@ async function testCompanyOverview() {
 
 async function testSymbolSearch() {
     try {
-        const data = await api.getSymbolForKeyword("tesla");
+        const data = await api.getSymbolForKeyword("BASF SE NA O.N.");
         console.log(data);
     } catch (err) {
         console.log(err);
