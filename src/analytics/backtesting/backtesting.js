@@ -11,6 +11,12 @@ function standardDeviation(portfolio, stocks) {}
 
 function sharpeRatio(portfolio, stocks) {}
 
+// Step 4: CompoundAnnualGrowthRate
+function compoundAnnualGrowthRate(portfolio,stock){
+
+    console.log("test")
+}
+
 // Step 5: Performance in Best and Worst Year
 function performanceBestYear(portfolio, stocks) {}
 
