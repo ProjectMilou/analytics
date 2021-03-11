@@ -69,11 +69,14 @@ if (portfolio) {
     } catch (err) {
         console.log(err);
     }
-
-    console.log(stocksData);
     // Step 2: Call the backtesting algorithm
 
-    backtesting.maxDrawdown(portfolio, stocksData);
+    const mddAndBestWorstYear = backtesting.mddAndBestWorstYear(
+        portfolio,
+        stocksData
+    );
+
+    console.log(mddAndBestWorstYear);
     // Step 3: If no errors => return results
 }
 
