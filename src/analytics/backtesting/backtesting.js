@@ -42,7 +42,31 @@ function finalPortfolioBalance(portfolio, stocksData) {}
 
 */
 
-function maxDrawdown(portfolio, stocksData) {}
+function maxDrawdown(portfolio, stocksData) {
+
+const firstSecurityStockData =stocksData[namesToSymbols[portfolio.securities[0].name]]
+
+const endDate = Object.keys(firstSecurityStockData)[0];
+const startDate= Object.keys(firstSecurityStockData)[Object.keys(firstSecurityStockData).length-1]
+
+let startValue=0;
+let endValue=0;
+portfolio.securities.forEach((stock)=>{
+    startValue+= stocksData[namesToSymbols[stock.name]][startDate]["4. close"]*stock.quantityNominal
+    endValue+= stocksData[namesToSymbols[stock.name]][endDate]["4. close"]*stock.quantityNominal
+});
+//only for testing
+/*console.log("start: "+startDate);
+console.log("end: "+endDate);
+console.log(Object.keys(stocksData[namesToSymbols[firstSecurity.name]]))
+console.log(startValue);
+console.log(endValue);*/
+const yearDif=(new Date(endDate)-new Date(startDate))/1000/60/60/24/365 
+const CAGR= (endValue/startValue)**(1/yearDif)-1
+console.log(yearDif);
+console.log(CAGR);
+return CAGR;
+}
 
 // Step 3: Standard Deviation and Sharpe Ratio
 function standardDeviation(portfolio, stocksData) {}
@@ -50,10 +74,10 @@ function standardDeviation(portfolio, stocksData) {}
 function sharpeRatio(portfolio, stocksData) {}
 
 // Step 4: CompoundAnnualGrowthRate
-function compoundAnnualGrowthRate(portfolio,stock){
+function compoundAnnualGrowthRate(portfolio,stocksData){
 
-    console.log("test")
 }
+
 
 // Step 5: Performance in Best and Worst Year
 function performanceBestYear(portfolio, stocksData) {}
