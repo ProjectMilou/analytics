@@ -26,64 +26,52 @@ stocksData =
 const namesToSymbols = {
     Tesla: "TSLA",
     Bayer: "BAYRY",
-    "BASF SE NA O.N.": "BAS"
+    "BASF SE NA O.N.": "BAS.FRK"
 };
 // Step 1: Final Portfolio Balance
 function finalPortfolioBalance(portfolio, stocksData) {}
 
-// Step 2: Max Drawdown
-/*
-    A maximum drawdown (MDD) is the maximum observed loss from a peak to a trough of a portfolio,
-    before a new peak is attained. Maximum drawdown is an indicator of downside risk over a specified
-    time period.
-
-    Maximum drawdown (MDD) is a measure of an asset's largest price drop from a peak to a trough.
-
-    Maximum Drawdown =  Minimimum Value - Maximum Value  / Maximum Value
-
-    TODO: DISCUSS - Assumption that all the assets are bought in EUR;
-                    All the assets are sold on the same date; 
-
-*/
-
-function mddAndBestWorstYear(portfolio, stocksData) {
-    let symbolToQuantity = {};
-    let symbols = [];
-
-    portfolio.securities.forEach((element) => {
-        symbolToQuantity[namesToSymbols[element.name]] =
-            element.quantityNominal;
-        symbols.push(namesToSymbols[element.name]);
-    });
-
-    // Just for testing;
-    console.log("********************************");
-    console.log("Stock symbols: ", symbols);
-    console.log(
-        "Quantity of stocks (can be converted to weights array)\n",
-        symbolToQuantity
+//TODO: DISCUSS - Assumption that all the assets are bought in EUR;
+/**
+ * Returns the maximum drawdown of a portfolio.
+ * Maximum Drawdown = Minimimum Value - Maximum Value  / Maximum Value
+ * @param {object} portfolio Portfolio from finAPI
+ * @param {{symbol: {date: {"1. open": "20.6350", "2. high": "71.7300", "3. low": "70.5200","4. close": "71.4900", "5. volume": "114923"}}}} stocksData Stocks data according to symbols
+ * @returns {{MDD, dateMax, dateMin, maxValue, minValue}}
+ * An object containing the MDD value, maximum and minimum value and the corresponding dates.
+ */
+function mdd(portfolio, stocksData) {
+    const [symbolToQuantity, symbols] = getSymbolsAndMappingToQuantity(
+        portfolio
     );
-
-    let aggregatedMax = 0;
+    let aggregatedMax = -9999999;
     let aggregatedMin = 9999999;
     let dateMax = "";
     let dateMin = "";
 
-    // Assuming that all the stocks are sold on the same dates
-    // Get the dates of the first Symbol and just iterate through them
-    // and use these dates for the other symbols as well
     const datesOfFirstSymbol = stocksData[symbols[0]];
 
-    for (const [date, values] of Object.entries(datesOfFirstSymbol)) {
+    // Used for dealing with the different dates of different stocks :)
+    // TODO: Discuss this part
+    let lastPriceForSymbol = {};
+
+    for (const date of Object.keys(datesOfFirstSymbol)) {
         let aggregatedSumOfAllStocks = 0;
 
         // For each of symbols calculate the amount of Stocks * price of stocks
         // Add the result to an aggregated sum of all stocks
         // Also ASSUMING that the value is given in EUR.
-
         symbols.forEach((symbol) => {
-            aggregatedSumOfAllStocks +=
-                stocksData[symbol][date]["4. close"] * symbolToQuantity[symbol];
+            if (date in stocksData[symbol]) {
+                aggregatedSumOfAllStocks +=
+                    stocksData[symbol][date]["4. close"] *
+                    symbolToQuantity[symbol];
+                lastPriceForSymbol[symbol] =
+                    stocksData[symbol][date]["4. close"] *
+                    symbolToQuantity[symbol];
+            } else {
+                aggregatedSumOfAllStocks += lastPriceForSymbol[symbol];
+            }
         });
 
         // Simply check if this is a maximum or a minimum value based on the results untill now
@@ -100,25 +88,12 @@ function mddAndBestWorstYear(portfolio, stocksData) {
     // According to the definition
     let MDD = (aggregatedMin - aggregatedMax) / aggregatedMax;
 
-    // Just for testing;
-    console.log("********************************");
-    console.log("Date of maximum value: ", dateMax);
-    console.log("Aggregated maximum value:", aggregatedMax);
-    console.log("Date of minimum value: ", dateMin);
-    console.log("Aggregated minimum value: ", aggregatedMin);
-    console.log(`Maximum Drawdown: ${(MDD * 100).toFixed(2)}%`);
-    console.log("********************************");
-
     return {
         MDD,
-        bestYear: {
-            year: dateMax.slice(0, 4),
-            value: aggregatedMax
-        },
-        worstYear: {
-            year: dateMin.slice(0, 4),
-            value: aggregatedMin
-        }
+        dateMax,
+        dateMin,
+        maxValue: aggregatedMax.toFixed(4),
+        minValue: aggregatedMin.toFixed(4)
     };
 }
 
@@ -127,7 +102,132 @@ function standardDeviation(portfolio, stocksData) {}
 
 function sharpeRatio(portfolio, stocksData) {}
 
+/**
+ * Returns the best and worst year performance of a portfolio.
+ * Measurements: Change and growth rate
+ * @param {object} portfolio Portfolio from finAPI
+ * @param {{symbol: {date: {"1. open": "20.6350", "2. high": "71.7300", "3. low": "70.5200","4. close": "71.4900", "5. volume": "114923"}}}} stocksData Stocks data according to symbols
+ * @returns {{bestYear: {changeBest, yearBest, growthRateBest}, worstYear: {changeWorst, yearWorst, growthRateWorst}}}
+ * An object containing data about the best and worst year
+ */
+function bestAndWorstYear(portfolio, stocksData) {
+    const [symbolToQuantity, symbols] = getSymbolsAndMappingToQuantity(
+        portfolio
+    );
+
+    let years = getStocksDateAccordingToYears(stocksData);
+
+    let changeBest = -9999999999;
+    let changeWorst = 9999999999;
+    let yearBest = "";
+    let yearWorst = "";
+    let growthRateBest = 0;
+    let growthRateWorst = 0;
+
+    // For each years e.g 2015, 2016
+    Object.keys(years).forEach((currYear) => {
+        let startPortfolioValue = 0;
+        let endPortfolioValue = 0;
+        // For each symbol TSLA, ... in year 2015, 2016...
+        Object.keys(years[currYear]).forEach((currSymbol) => {
+            // Last date of the given year
+            let endDateForSymbol = years[currYear][currSymbol][0];
+
+            // First date of the given year
+            let startDateForSymbol =
+                years[currYear][currSymbol][
+                    years[currYear][currSymbol].length - 1
+                ];
+
+            // Summing up everything
+            startPortfolioValue +=
+                stocksData[currSymbol][startDateForSymbol]["4. close"] *
+                symbolToQuantity[currSymbol];
+            endPortfolioValue +=
+                stocksData[currSymbol][endDateForSymbol]["4. close"] *
+                symbolToQuantity[currSymbol];
+        });
+        // Calculate the change
+        let currChange = endPortfolioValue - startPortfolioValue;
+        // Calculate the growth rate
+        let currGrowthRate =
+            (endPortfolioValue - startPortfolioValue) / startPortfolioValue;
+        // Simple checks
+        if (currChange > changeBest) {
+            changeBest = currChange.toFixed(4);
+            growthRateBest = currGrowthRate.toFixed(4);
+            yearBest = currYear;
+        }
+        if (currChange < changeWorst) {
+            changeWorst = currChange.toFixed(4);
+            growthRateWorst = currGrowthRate.toFixed(4);
+            yearWorst = currYear;
+        }
+    });
+
+    return {
+        bestYear: {
+            changeBest,
+            yearBest,
+            growthRateBest
+        },
+        worstYear: {
+            changeWorst,
+            yearWorst,
+            growthRateWorst
+        }
+    };
+}
+
+/**
+ *  Extracts the symbols and the symbols to quantity mapping
+ * @param {object} portfolio Portfolio from finAPI
+ * @returns {[{symbol: number}, [string]]} [symbolToQuantity, symbols]
+ *
+ */
+function getSymbolsAndMappingToQuantity(portfolio) {
+    let symbolToQuantity = {};
+    let symbols = [];
+
+    portfolio.securities.forEach((element) => {
+        symbolToQuantity[namesToSymbols[element.name]] =
+            element.quantityNominal;
+        symbols.push(namesToSymbols[element.name]);
+    });
+    return [symbolToQuantity, symbols];
+}
+
+/**
+ *  Extracts the dates according to the symbols and orders them by years.
+ * @param {{symbol: {date: {"1. open": "20.6350", "2. high": "71.7300", "3. low": "70.5200","4. close": "71.4900", "5. volume": "114923"}}}} stocksData Stocks data according to symbols
+ * @returns {{year: {symbol: {date: { "1. open": "20.6350", "2. high": "71.7300", "3. low": "70.5200","4. close": "71.4900", "5. volume": "114923"}}}}}
+ * An object: "2015" -> "IBM" -> "2015-01-01" -> "4. close": "150.00"
+ */
+function getStocksDateAccordingToYears(stocksData) {
+    let years = {};
+    Object.keys(stocksData).forEach((currSymbol) => {
+        Object.keys(stocksData[currSymbol]).forEach((currDate) => {
+            let jsDate = new Date(currDate);
+            if (jsDate.getFullYear() in years) {
+                if (currSymbol in years[jsDate.getFullYear()]) {
+                    const yearsArray = years[jsDate.getFullYear()][currSymbol];
+                    yearsArray.push(currDate);
+                    years[jsDate.getFullYear()][currSymbol] = yearsArray;
+                } else {
+                    years[jsDate.getFullYear()][currSymbol] = [currDate];
+                }
+            } else {
+                years[jsDate.getFullYear()] = {};
+                years[jsDate.getFullYear()][currSymbol] = [currDate];
+            }
+        });
+    });
+
+    return years;
+}
+
 exports.finalPortfolioBalance = finalPortfolioBalance;
-exports.mddAndBestWorstYear = mddAndBestWorstYear;
+exports.mdd = mdd;
 exports.standardDeviation = standardDeviation;
 exports.sharpeRatio = sharpeRatio;
+exports.bestAndWorstYear = bestAndWorstYear;

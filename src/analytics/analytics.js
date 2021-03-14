@@ -8,14 +8,14 @@ const backtesting = require("./backtesting/backtesting");
 // Can be compared like fromDate < toDate or fromDate > toDate
 // Equality can be compared like fromDate.getTime() === toDate.getTime()
 const fromDate = new Date("2015-01-01");
-const toDate = new Date("2016-03-08");
+const toDate = new Date("2018-12-31");
 
 // Used Google and Symbol Search from AlphaVantageAPI
 // Used for mapping Names to Symbols in extractSymbolsFromPortfolio()
 const namesToSymbols = {
     Tesla: "TSLA",
     Bayer: "BAYRY",
-    "BASF SE NA O.N.": "BAS"
+    "BASF SE NA O.N.": "BAS.FRK"
 };
 
 let portfolio;
@@ -38,8 +38,7 @@ if (portfolio) {
     // Step 1.1: If we have a Database available try to get the data from there.
     // If the data that we are looking for doesn't exist there -> call api.
 
-    //fetchStocksForPortfolio(portfolio, symbols);
-
+    //fetchStocksForSymbols(symbols);
     let stocksData = {};
     try {
         symbols.forEach((symbol) => {
@@ -47,7 +46,7 @@ if (portfolio) {
                 `./symbolWeeklyData/${symbol}.json`
             );
             const dataForSymbol = JSON.parse(jsonString);
-            const weeklyData = dataForSymbol["Weekly Time Series"];
+            const weeklyData = dataForSymbol["Time Series (Daily)"];
             let filteredData = {};
 
             // Filter by the fromDate and endDate
@@ -70,13 +69,14 @@ if (portfolio) {
         console.log(err);
     }
     // Step 2: Call the backtesting algorithm
+    const mdd = backtesting.mdd(portfolio, stocksData);
 
-    const mddAndBestWorstYear = backtesting.mddAndBestWorstYear(
-        portfolio,
-        stocksData
-    );
+    console.log(mdd);
 
-    console.log(mddAndBestWorstYear);
+    //const BWY = backtesting.bestAndWorstYear(portfolio, stocksData);
+    //console.log(BWY);
+    const BWY = backtesting.bestAndWorstYear(portfolio, stocksData);
+    console.log(BWY);
     // Step 3: If no errors => return results
 }
 
@@ -84,7 +84,7 @@ function fetchStocksForSymbols(symbols) {
     // const dataForSymbols = {};
 
     symbols.forEach((symbol) => {
-        api.getTimeSeriesWeekly(symbol)
+        api.getTimeSeriesDaily(symbol)
             .then((data) => {
                 fs.writeFileSync(
                     `./symbolWeeklyData/${symbol}.json`,
