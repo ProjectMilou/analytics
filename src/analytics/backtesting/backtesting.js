@@ -45,23 +45,26 @@ function finalPortfolioBalance(portfolio, stocksData, startYear, endYear) {
     startYear = Object.keys(years)[0];
     endYear = Object.keys(years)[Object.keys(years).length - 1];
     let totalBalance = 0;
-
+    let totalStartYear = 0;
+    let totalEndYear = 0;
     symbols.forEach((symbol) => {
-        for (let i = 0; i < symbol.length; i++) {
-            //I assume the length of dates in the symbols is equal for both startYear and endYear
-            console.log(symbol);
-            let dateForStartSymbol = years[startYear][symbol][i];
-            let dateForEndSymbol = years[endYear][symbol][i];
+        //I assume the length of dates in the symbols is equal for both startYear and endYear
+        console.log(symbol);
+        let dateForStartSymbol = years[startYear][symbol];
+        let dateForEndSymbol = years[endYear][symbol];
+        dateForStartSymbol.forEach((date) => {
+            totalStartYear +=
+                stocksData[symbol][date]["4. close"] * symbolToQuantity[symbol];
+        });
+        dateForEndSymbol.forEach((date) => {
+            totalEndYear +=
+                stocksData[symbol][date]["4. close"] * symbolToQuantity[symbol];
+        });
 
-            startPortfolioValue =
-                stocksData[symbol][dateForStartSymbol]["4. close"] *
-                symbolToQuantity[symbol];
-            endPortfolioValue =
-                stocksData[symbol][dateForEndSymbol]["4. close"] *
-                symbolToQuantity[symbol];
-            totalBalance += startPortfolioValue - endPortfolioValue;
-        }
+        //console.log(dateForStartSymbol);
+        //console.log(dateForEndSymbol);
     });
+    totalBalance = totalStartYear - totalEndYear;
     if (totalBalance < 0) {
         return { totalBalance: 0 };
     }
