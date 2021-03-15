@@ -29,7 +29,45 @@ const namesToSymbols = {
     "BASF SE NA O.N.": "BAS.FRK"
 };
 // Step 1: Final Portfolio Balance
-function finalPortfolioBalance(portfolio, stocksData) {}
+/*
+It should return the finalPortfolioBalance for a given timespan
+Core idea: iterates through all dates of all symbols of the two given years
+and adds the difference between start and end portfolio value of each stock
+Depending whaether the final sum is negative or positive returns sum or 0 
+*/
+function finalPortfolioBalance(portfolio, stocksData, startYear, endYear) {
+    const [symbolToQuantity, symbols] = getSymbolsAndMappingToQuantity(
+        portfolio
+    );
+
+    let years = getStocksDateAccordingToYears(stocksData);
+    startYear = Object.keys(years)[0];
+    endYear = Object.keys(years)[Object.keys(years).length - 1];
+    let totalBalance = 0;
+
+    symbols.forEach((symbol) => {
+        for (let i = 0; i < symbol.length; i++) {
+            //I assume the length of dates in the symbols is equal for both startYear and endYear
+            console.log(symbol);
+            let dateForStartSymbol = years[startYear][symbol][i];
+            let dateForEndSymbol = years[endYear][symbol][i];
+
+            startPortfolioValue =
+                stocksData[symbol][dateForStartSymbol]["4. close"] *
+                symbolToQuantity[symbol];
+            endPortfolioValue =
+                stocksData[symbol][dateForEndSymbol]["4. close"] *
+                symbolToQuantity[symbol];
+            totalBalance += startPortfolioValue - endPortfolioValue;
+        }
+    });
+    if (totalBalance < 0) {
+        return { totalBalance: 0 };
+    }
+    return {
+        totalBalance
+    };
+}
 
 //TODO: DISCUSS - Assumption that all the assets are bought in EUR;
 /**
@@ -164,7 +202,7 @@ function bestAndWorstYear(portfolio, stocksData) {
             yearWorst = currYear;
         }
     });
-
+    //changeBest = changeBest:changeBest
     return {
         bestYear: {
             changeBest,
@@ -197,6 +235,7 @@ function getSymbolsAndMappingToQuantity(portfolio) {
     return [symbolToQuantity, symbols];
 }
 
+// const [symbolToQuantity,symbols] = getSymbolsAndMappingToQuantity
 /**
  *  Extracts the dates according to the symbols and orders them by years.
  * @param {{symbol: {date: {"1. open": "20.6350", "2. high": "71.7300", "3. low": "70.5200","4. close": "71.4900", "5. volume": "114923"}}}} stocksData Stocks data according to symbols

@@ -71,12 +71,15 @@ if (portfolio) {
     // Step 2: Call the backtesting algorithm
     const mdd = backtesting.mdd(portfolio, stocksData);
 
-    console.log(mdd);
+    //console.log(mdd);
 
     //const BWY = backtesting.bestAndWorstYear(portfolio, stocksData);
     //console.log(BWY);
     const BWY = backtesting.bestAndWorstYear(portfolio, stocksData);
-    console.log(BWY);
+    //console.log(BWY);
+    //here I must print my result
+    const FPV = backtesting.finalPortfolioBalance(portfolio, stocksData);
+    console.log(FPV);
     // Step 3: If no errors => return results
 }
 
