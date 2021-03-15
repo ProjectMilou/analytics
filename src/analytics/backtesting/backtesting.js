@@ -34,6 +34,7 @@ It should return the finalPortfolioBalance for a given timespan
 Core idea: iterates through all dates of all symbols of the two given years
 and adds the difference between start and end portfolio value of each stock
 Depending whaether the final sum is negative or positive returns sum or 0 
+
 */
 function finalPortfolioBalance(portfolio, stocksData, startYear, endYear) {
     const [symbolToQuantity, symbols] = getSymbolsAndMappingToQuantity(

@@ -80,6 +80,7 @@ if (portfolio) {
     //here I must print my result
     const FPV = backtesting.finalPortfolioBalance(portfolio, stocksData);
     console.log(FPV);
+
     // Step 3: If no errors => return results
 }
 
