@@ -46,10 +46,31 @@ function maxDrawdown(portfolio, stocksData) { }
 
 // Step 3: Standard Deviation and Sharpe Ratio
 function standardDeviation(portfolio, stocksData) {
-    const correlation = stockCorrelation(portfolio, stocksData);
+    const usedDates = Object.keys(stocksData[namesToSymbols[portfolio.securities[0].name]]);
+    const numDays = usedDates.length;
 
+    let valueEachDay = [];
+    let lastValues = {};
 
+    portfolio.securities.forEach((stock) => {
+        lastValues[stock.name] = 0;
+    });
 
+    for (i = 0; i < numDays; i++) {
+        let sum = 0;
+        portfolio.securities.forEach((stock) => {
+            if (usedDates[i] in stocksData[namesToSymbols[stock.name]]) {
+                lastValues[stock.name] = Number(stocksData[namesToSymbols[stock.name]][usedDates[i]]["4. close"]);
+            }
+            sum += lastValues[stock.name];
+        });
+        valueEachDay.push(sum);
+    }
+
+    const stats = require("stats-lite");
+    const standardDeviation = stats.stdev(valueEachDay);
+    //standard deviation in euro
+    console.log(standardDeviation);
 }
 
 function sharpeRatio(portfolio, stocksData) { }
@@ -89,6 +110,49 @@ function compoundAnnualGrowthRate(portfolio, stocksData) {
 }
 
 function stockCorrelation(portfolio, stocksData) {
+
+    const calculateCorrelation = require("calculate-correlation");
+    const stats = require("stats-lite");
+    //may need to find starting date and combine all dates
+    //need to use dailyinfo
+    const usedDates = Object.keys(stocksData[namesToSymbols[portfolio.securities[0].name]]);
+    const numDays = usedDates.length;
+    let valuesOfStock = {};
+    let correlations = {};
+
+    portfolio.securities.forEach((stock) => {
+        let lastValue = 0;
+        valuesOfStock[stock.name] = [];
+        for (i = 0; i < numDays; i++) {
+            if (usedDates[i] in stocksData[namesToSymbols[stock.name]]) {
+                lastValue = Number(stocksData[namesToSymbols[stock.name]][usedDates[i]]["4. close"]);
+            }
+            valuesOfStock[stock.name].push(lastValue);
+        }
+
+    });
+    for (stock1 of portfolio.securities) {
+        for (stock2 of portfolio.securities) {
+            if (stock1 == stock2) { break; }
+            const correlationKey = getCorrelationKey(stock1, stock2);
+            if (correlationKey in correlations) { break; }
+            else {
+                correlations[correlationKey] = calculateCorrelation(valuesOfStock[stock1.name], valuesOfStock[stock2.name]);
+            }
+        }
+    }
+
+    let standardDeviation = {};
+    portfolio.securities.forEach((stock) => {
+        standardDeviation[stock.name] = stats.stdev(valuesOfStock[stock.name]);
+
+    });
+    console.log(standardDeviation);
+    //console.log(valuesOfStock);
+    console.log(correlations);
+    /*
+
+
     //may need to find starting date and combine all dates
     //need to use dailyinfo
     const usedDates = Object.keys(stocksData[namesToSymbols[portfolio.securities[0].name]]);
@@ -140,17 +204,18 @@ function stockCorrelation(portfolio, stocksData) {
             else {
                 let sumOfCombinedDeviation = 0;
                 for (i = 0; i < numDays; i++) {
-                    sumOfCombinedDeviation += (deviationPerDay[stock1.name][usedDates[i]]) * (deviationPerDay[stock2.name][usedDates[i]])
+                    sumOfCombinedDeviation += deviationPerDay[stock1.name][usedDates[i]] * deviationPerDay[stock2.name][usedDates[i]];
                 }
-                combinedStandardDeviation[correlationKey] = Math.sqrt(sumOfCombinedDeviation / numDays);
+
+                combinedStandardDeviation[correlationKey] = sumOfCombinedDeviation / numDays;
                 correlation[correlationKey] = combinedStandardDeviation[correlationKey] / (stockStandardDeviation[stock1.name] * stockStandardDeviation[stock2.name]);
             }
         }
     }
-    console.log(combinedStandardDeviation);
-    console.log()
+    console.log(stockStandardDeviation);
+    //console.log(combinedStandardDeviation);
     console.log(correlation);
-    return correlation;
+    return correlation;*/
 }
 
 

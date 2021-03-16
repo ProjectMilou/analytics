@@ -8,7 +8,7 @@ const backtesting = require("./backtesting/backtesting");
 // Can be compared like fromDate < toDate or fromDate > toDate
 // Equality can be compared like fromDate.getTime() === toDate.getTime()
 const fromDate = new Date("2015-01-01");
-const toDate = new Date("2016-03-08");
+const toDate = new Date("2018-12-31");
 
 // Used Google and Symbol Search from AlphaVantageAPI
 // Used for mapping Names to Symbols in extractSymbolsFromPortfolio()
@@ -47,7 +47,7 @@ if (portfolio) {
                 `./symbolWeeklyData/${symbol}.json`
             );
             const dataForSymbol = JSON.parse(jsonString);
-            const weeklyData = dataForSymbol["Weekly Time Series"];
+            const weeklyData = dataForSymbol["Time Series (Daily)"];
             let filteredData = {};
 
             // Filter by the fromDate and endDate
@@ -60,21 +60,25 @@ if (portfolio) {
                 // ToDate or whether it is exactly on the same day
                 if (currentDate >= fromDate && currentDate <= toDate) {
                     // add the data to a local variable
+
                     filteredData[key] = value;
                 }
             }
 
             stocksData[symbol] = filteredData;
+
         });
     } catch (err) {
         console.log(err);
     }
 
+
     // Step 2: Call the backtesting algorithm
 
     //backtesting.maxDrawdown(portfolio, stocksData);
     //backtesting.compoundAnnualGrowthRate(portfolio, stocksData);
-    backtesting.stockCorrelation(portfolio, stocksData);
+    //backtesting.stockCorrelation(portfolio, stocksData);
+    backtesting.standardDeviation(portfolio, stocksData);
     // Step 3: If no errors => return results
 }
 
