@@ -38,42 +38,43 @@ if (portfolio) {
     // Step 1.1: If we have a Database available try to get the data from there.
     // If the data that we are looking for doesn't exist there -> call api.
 
-//fetchStocksForPortfolio(portfolio, symbols);
+    //fetchStocksForPortfolio(portfolio, symbols);
 
-let stocksData = {};
-try {
-    symbols.forEach((symbol) => {
-        const jsonString = fs.readFileSync(
-            `./symbolWeeklyData/${symbol}.json`
-        );
-        const dataForSymbol = JSON.parse(jsonString);
-        const weeklyData = dataForSymbol["Weekly Time Series"];
-        let filteredData = {};
+    let stocksData = {};
+    try {
+        symbols.forEach((symbol) => {
+            const jsonString = fs.readFileSync(
+                `./symbolWeeklyData/${symbol}.json`
+            );
+            const dataForSymbol = JSON.parse(jsonString);
+            const weeklyData = dataForSymbol["Weekly Time Series"];
+            let filteredData = {};
 
-        // Filter by the fromDate and endDate
-        for (const [key, value] of Object.entries(weeklyData)) {
-            // Create a date from the key of the object
-            // The key would be something like : "2021-03-08". Check time_series_weekly.json
-            const currentDate = new Date(key);
+            // Filter by the fromDate and endDate
+            for (const [key, value] of Object.entries(weeklyData)) {
+                // Create a date from the key of the object
+                // The key would be something like : "2021-03-08". Check time_series_weekly.json
+                const currentDate = new Date(key);
 
-            // Check whether the current date is between the given From- and
-            // ToDate or whether it is exactly on the same day
-            if (currentDate >= fromDate && currentDate <= toDate) {
-                // add the data to a local variable
-                filteredData[key] = value;
+                // Check whether the current date is between the given From- and
+                // ToDate or whether it is exactly on the same day
+                if (currentDate >= fromDate && currentDate <= toDate) {
+                    // add the data to a local variable
+                    filteredData[key] = value;
+                }
             }
-        }
 
-        stocksData[symbol] = filteredData;
-    });
-} catch (err) {
-    console.log(err);
-}
-    console.log("functions");
+            stocksData[symbol] = filteredData;
+        });
+    } catch (err) {
+        console.log(err);
+    }
+
     // Step 2: Call the backtesting algorithm
-    
-    backtesting.maxDrawdown(portfolio, stocksData);
-    backtesting.compoundAnnualGrowthRate(portfolio, stocksData);
+
+    //backtesting.maxDrawdown(portfolio, stocksData);
+    //backtesting.compoundAnnualGrowthRate(portfolio, stocksData);
+    backtesting.stockCorrelation(portfolio, stocksData);
     // Step 3: If no errors => return results
 }
 
