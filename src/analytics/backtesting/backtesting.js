@@ -31,13 +31,13 @@ const namesToSymbols = {
 // Step 1: Final Portfolio Balance
 function finalPortfolioBalance(portfolio, stocksData) {}
 
-//TODO: DISCUSS - Assumption that all the assets are bought in EUR;
 /**
  * Returns the maximum drawdown of a portfolio.
- * Maximum Drawdown = Minimimum Value - Maximum Value  / Maximum Value
+ * MDDMaxToMin = Minimimum Value - Maximum Value  / Maximum Value
+ * MDDInitialToMin = Minimum Value - Initial Value / Initial Value
  * @param {object} portfolio Portfolio from finAPI
- * @param {{symbol: {date: {"1. open": "20.6350", "2. high": "71.7300", "3. low": "70.5200","4. close": "71.4900", "5. volume": "114923"}}}} stocksData Stocks data according to symbols
- * @returns {{MDD, dateMax, dateMin, maxValue, minValue}}
+ * @param {{symbol: {date: {"1. open": number, "2. high": number, "3. low": number,"4. close": number, "5. volume": number}}}} stocksData Stocks data according to symbols
+ * @returns {{MDDMaxToMin: number,MDDInitialToMin: number, dateMax: string, dateMin: string, maxValue: number, minValue: number, initialValue: number}}
  * An object containing the MDD value, maximum and minimum value and the corresponding dates.
  */
 function mdd(portfolio, stocksData) {
@@ -48,14 +48,41 @@ function mdd(portfolio, stocksData) {
     let aggregatedMin = 9999999;
     let dateMax = "";
     let dateMin = "";
+    let initialValue = 0;
 
-    const datesOfFirstSymbol = stocksData[symbols[0]];
+    // All the dates of all symbols
+    let aggregatedDates = [];
+    symbols.forEach((symbol) => {
+        Object.keys(stocksData[symbol])
+            .reverse()
+            .forEach((currDate) => {
+                if (!aggregatedDates.includes(currDate)) {
+                    aggregatedDates.push(currDate);
+                }
+            });
+    });
 
-    // Used for dealing with the different dates of different stocks :)
-    // TODO: Discuss this part
+    // Used for dealing with the different dates of different stocks
+    // Saves the last observed price for a stock
     let lastPriceForSymbol = {};
 
-    for (const date of Object.keys(datesOfFirstSymbol)) {
+    symbols.forEach((symbol) => {
+        const datesForSymbol = Object.keys(stocksData[symbol]).reverse();
+
+        // Important for first for each loop - if there is no previously observed price
+        // of a given stock - code breaks :) If it doesn't break, then the portfolio value
+        // will probably be the minimal observed value => false calculation.
+        lastPriceForSymbol[symbol] =
+            stocksData[symbol][datesForSymbol[0]]["4. close"];
+
+        // Used for MDD calculation according to Julien's definition
+        initialValue +=
+            stocksData[symbol][datesForSymbol[0]]["4. close"] *
+            symbolToQuantity[symbol];
+    });
+
+    // Main logic
+    for (const date of aggregatedDates) {
         let aggregatedSumOfAllStocks = 0;
 
         // For each of symbols calculate the amount of Stocks * price of stocks
@@ -84,16 +111,24 @@ function mdd(portfolio, stocksData) {
             dateMin = date;
         }
     }
-
     // According to the definition
-    let MDD = (aggregatedMin - aggregatedMax) / aggregatedMax;
+    let MDDMaxToMin = ((aggregatedMin - aggregatedMax) / aggregatedMax).toFixed(
+        4
+    );
+    // According to Julien
+    let MDDInitialToMin = (
+        (aggregatedMin - initialValue) /
+        initialValue
+    ).toFixed(4);
 
     return {
-        MDD,
+        MDDMaxToMin,
+        MDDInitialToMin,
         dateMax,
         dateMin,
         maxValue: aggregatedMax.toFixed(4),
-        minValue: aggregatedMin.toFixed(4)
+        minValue: aggregatedMin.toFixed(4),
+        initialValue: initialValue.toFixed(4)
     };
 }
 
@@ -106,8 +141,8 @@ function sharpeRatio(portfolio, stocksData) {}
  * Returns the best and worst year performance of a portfolio.
  * Measurements: Change and growth rate
  * @param {object} portfolio Portfolio from finAPI
- * @param {{symbol: {date: {"1. open": "20.6350", "2. high": "71.7300", "3. low": "70.5200","4. close": "71.4900", "5. volume": "114923"}}}} stocksData Stocks data according to symbols
- * @returns {{bestYear: {changeBest, yearBest, growthRateBest}, worstYear: {changeWorst, yearWorst, growthRateWorst}}}
+ * @param {{symbol: {date: {"1. open": number, "2. high": number, "3. low": number,"4. close": number, "5. volume": number}}}} stocksData Stocks data according to symbols
+ * @returns {{bestYear: {changeBest: number, yearBest: string, growthRateBest: number}, worstYear: {changeWorst: number, yearWorst: string, growthRateWorst: number}}}
  * An object containing data about the best and worst year
  */
 function bestAndWorstYear(portfolio, stocksData) {
@@ -199,8 +234,8 @@ function getSymbolsAndMappingToQuantity(portfolio) {
 
 /**
  *  Extracts the dates according to the symbols and orders them by years.
- * @param {{symbol: {date: {"1. open": "20.6350", "2. high": "71.7300", "3. low": "70.5200","4. close": "71.4900", "5. volume": "114923"}}}} stocksData Stocks data according to symbols
- * @returns {{year: {symbol: {date: { "1. open": "20.6350", "2. high": "71.7300", "3. low": "70.5200","4. close": "71.4900", "5. volume": "114923"}}}}}
+ * @param {{symbol: {date: {"1. open": number, "2. high": number, "3. low": number,"4. close": number, "5. volume": number}}}} stocksData Stocks data according to symbols
+ * @returns {{year: {symbol: {date: { "1. open": number, "2. high": number, "3. low": number,"4. close": number, "5. volume": number}}}}}
  * An object: "2015" -> "IBM" -> "2015-01-01" -> "4. close": "150.00"
  */
 function getStocksDateAccordingToYears(stocksData) {
