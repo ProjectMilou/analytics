@@ -115,22 +115,41 @@ function stockCorrelation(portfolio, stocksData) {
     const stats = require("stats-lite");
     //may need to find starting date and combine all dates
     //need to use dailyinfo
-    const usedDates = Object.keys(stocksData[namesToSymbols[portfolio.securities[0].name]]);
+    //only use dates available in all
+    let usedDates = Object.keys(stocksData[namesToSymbols[portfolio.securities[0].name]]);
+    usedDates.forEach((date) => {
+        let dateInAll = true;
+        portfolio.securities.forEach((stock) => {
+            if (!(date in stocksData[namesToSymbols[stock.name]])) {
+                dateInAll = false;
+            }
+        });
+        if (!dateInAll) {
+            const index = usedDates.indexOf(date);
+            if (index > -1) {
+                usedDates.splice(index, 1);
+            }
+        }
+    });
+
     const numDays = usedDates.length;
     let valuesOfStock = {};
     let correlations = {};
 
+    //put allvalues for each stock in an array 
     portfolio.securities.forEach((stock) => {
         let lastValue = 0;
         valuesOfStock[stock.name] = [];
         for (i = 0; i < numDays; i++) {
             if (usedDates[i] in stocksData[namesToSymbols[stock.name]]) {
                 lastValue = Number(stocksData[namesToSymbols[stock.name]][usedDates[i]]["4. close"]);
+                valuesOfStock[stock.name].push(lastValue);
             }
-            valuesOfStock[stock.name].push(lastValue);
+
         }
 
     });
+    //calculate correlation
     for (stock1 of portfolio.securities) {
         for (stock2 of portfolio.securities) {
             if (stock1 == stock2) { break; }
@@ -147,75 +166,12 @@ function stockCorrelation(portfolio, stocksData) {
         standardDeviation[stock.name] = stats.stdev(valuesOfStock[stock.name]);
 
     });
+
     console.log(standardDeviation);
     //console.log(valuesOfStock);
     console.log(correlations);
-    /*
 
 
-    //may need to find starting date and combine all dates
-    //need to use dailyinfo
-    const usedDates = Object.keys(stocksData[namesToSymbols[portfolio.securities[0].name]]);
-    const numDays = usedDates.length;
-    //calculates the averageprice per stock
-    let averagePrices = {};
-    portfolio.securities.forEach((stock) => {
-        let sum = 0;
-        let lastValue = 0;
-        for (i = 0; i < numDays; i++) {
-            if (usedDates[i] in stocksData[namesToSymbols[stock.name]]) {
-                lastValue = Number(stocksData[namesToSymbols[stock.name]][usedDates[i]]["4. close"]);
-            }
-            sum += lastValue;
-        }
-        averagePrices[stock.name] = sum / numDays;
-    });
-    //calculates the deviation from average per day
-    let deviationPerDay = {};
-    portfolio.securities.forEach((stock) => {
-        let dateDif = {};
-        for (i = 0; i < numDays; i++) {
-            if (usedDates[i] in stocksData[namesToSymbols[stock.name]]) {
-                lastValue = Number(stocksData[namesToSymbols[stock.name]][usedDates[i]]["4. close"]);
-            }
-            dateDif[usedDates[i]] = lastValue - averagePrices[stock.name];
-            deviationPerDay[stock.name] = dateDif;
-        }
-    });
-    //calculates standard deviation for each stock
-    let stockStandardDeviation = {};
-    portfolio.securities.forEach((stock) => {
-        let sumOfSquares = 0;
-        for (i = 0; i < numDays; i++) {
-            sumOfSquares += (deviationPerDay[stock.name][usedDates[i]]) ** 2;
-        }
-        stockStandardDeviation[stock.name] = Math.sqrt(sumOfSquares / numDays);
-    });
-
-    //calcs and save the correlation under the correlationKey
-    let combinedStandardDeviation = {};
-    let correlation = {};
-    for (stock1 of portfolio.securities) {
-        for (stock2 of portfolio.securities) {
-            if (stock1 == stock2) { break; }
-
-            const correlationKey = getCorrelationKey(stock1, stock2);
-            if (correlationKey in combinedStandardDeviation) { break; }
-            else {
-                let sumOfCombinedDeviation = 0;
-                for (i = 0; i < numDays; i++) {
-                    sumOfCombinedDeviation += deviationPerDay[stock1.name][usedDates[i]] * deviationPerDay[stock2.name][usedDates[i]];
-                }
-
-                combinedStandardDeviation[correlationKey] = sumOfCombinedDeviation / numDays;
-                correlation[correlationKey] = combinedStandardDeviation[correlationKey] / (stockStandardDeviation[stock1.name] * stockStandardDeviation[stock2.name]);
-            }
-        }
-    }
-    console.log(stockStandardDeviation);
-    //console.log(combinedStandardDeviation);
-    console.log(correlation);
-    return correlation;*/
 }
 
 

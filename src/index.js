@@ -14,10 +14,7 @@ async function testIntraday() {
 async function testDaily() {
     try {
         const data = await api.getTimeSeriesDaily("TSLA");
-        const fs = require("fs");
-        fs.writeFile('./symbolWeeklyData/TSLA.json', JSON.stringify(data, null, 2), (err) => {
-            if (err) console.log('Error writing file:', err)
-        });
+
 
         console.log(data);
     } catch (err) {
@@ -38,8 +35,11 @@ async function testWeekly() {
 
 async function testMonthly() {
     try {
-        const data = await api.getTimeSeriesMonthly("BAS.FRK");
-
+        const data = await api.getTimeSeriesMonthly("BAYRY");
+        const fs = require("fs");
+        fs.writeFile('./symbolMonthlyData/BAYRY.json', JSON.stringify(data, null, 2), (err) => {
+            if (err) console.log('Error writing file:', err)
+        });
         console.log(data);
     } catch (err) {
         console.log(err);
@@ -67,8 +67,8 @@ async function testSymbolSearch() {
 // Uncomment the functions below if you want to see the responses :)
 
 //testIntraday();
-testDaily();
+//testDaily();
 //testWeekly();
-//testMonthly();
+testMonthly();
 //testCompanyOverview();
 //testSymbolSearch();
