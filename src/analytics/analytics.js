@@ -73,6 +73,7 @@ try {
     // Step 2: Call the backtesting algorithm
     
     backtesting.maxDrawdown(portfolio, stocksData);
+    backtesting.compoundAnnualGrowthRate(portfolio, stocksData);
     // Step 3: If no errors => return results
 }
 
