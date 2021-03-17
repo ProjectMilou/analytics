@@ -44,10 +44,10 @@ if (portfolio) {
     try {
         symbols.forEach((symbol) => {
             const jsonString = fs.readFileSync(
-                `./symbolMonthlyData/${symbol}.json`
+                `./symbolWeeklyData/${symbol}.json`
             );
             const dataForSymbol = JSON.parse(jsonString);
-            const weeklyData = dataForSymbol["Monthly Time Series"];
+            const weeklyData = dataForSymbol["Time Series (Daily)"];
             let filteredData = {};
 
             // Filter by the fromDate and endDate

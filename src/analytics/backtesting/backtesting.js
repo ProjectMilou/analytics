@@ -69,10 +69,7 @@ function standardDeviation(portfolio, stocksData) {
         if (i < numDays - 1) {
             valueEachDay.push(sums[(i + 1)] / sum - 1);
         }
-
-
     }
-
     const stats = require("stats-lite");
     const standardDeviation = stats.stdev(valueEachDay);
     //standard deviation in euro
@@ -109,7 +106,6 @@ function stockCorrelationAndStandardDeviation(portfolio, stocksData) {
     //need to use dailyinfo
     //either only use data available in all or use last updated value
     const usedDates = getDaysAvailableInAll(portfolio, stocksData)//Object.keys(stocksData[namesToSymbols[portfolio.securities[0].name]]);
-    console.log(usedDates);
     const numDays = usedDates.length;
     let valuesOfStock = {};
     let correlations = {};
@@ -128,7 +124,6 @@ function stockCorrelationAndStandardDeviation(portfolio, stocksData) {
         }
 
     });
-    console.log(valuesOfStock);
     //calculate correlation
     for (stock1 of portfolio.securities) {
         for (stock2 of portfolio.securities) {
