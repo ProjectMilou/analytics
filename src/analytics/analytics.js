@@ -7,7 +7,7 @@ const backtesting = require("./backtesting/backtesting");
 
 // Can be compared like fromDate < toDate or fromDate > toDate
 // Equality can be compared like fromDate.getTime() === toDate.getTime()
-const fromDate = new Date("2019-01-01");
+const fromDate = new Date("2015-01-01");
 const toDate = new Date("2020-12-31");
 
 // Used Google and Symbol Search from AlphaVantageAPI
@@ -76,9 +76,9 @@ if (portfolio) {
     // Step 2: Call the backtesting algorithm
 
     //backtesting.maxDrawdown(portfolio, stocksData);
-    //backtesting.compoundAnnualGrowthRate(portfolio, stocksData);
-    backtesting.stockCorrelation(portfolio, stocksData);
-    //backtesting.standardDeviation(portfolio, stocksData);
+    console.log(backtesting.compoundAnnualGrowthRate(portfolio, stocksData));
+    backtesting.stockCorrelationAndStandardDeviation(portfolio, stocksData);
+    backtesting.standardDeviation(portfolio, stocksData);
     // Step 3: If no errors => return results
 }
 

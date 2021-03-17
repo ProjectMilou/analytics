@@ -56,47 +56,38 @@ function standardDeviation(portfolio, stocksData) {
         lastValues[stock.name] = 0;
     });
 
-    for (i = 0; i < numDays; i++) {
+    let sums = {};
+    for (i = numDays - 1; i >= 0; i--) {
         let sum = 0;
         portfolio.securities.forEach((stock) => {
             if (usedDates[i] in stocksData[namesToSymbols[stock.name]]) {
-                lastValues[stock.name] = Number(stocksData[namesToSymbols[stock.name]][usedDates[i]]["4. close"]);
+                lastValues[stock.name] = stocksData[namesToSymbols[stock.name]][usedDates[i]]["4. close"] * stock.quantityNominal;
             }
             sum += lastValues[stock.name];
         });
-        valueEachDay.push(sum);
+        sums[i] = sum;
+        if (i < numDays - 1) {
+            valueEachDay.push(sums[(i + 1)] / sum - 1);
+        }
+
+
     }
 
     const stats = require("stats-lite");
     const standardDeviation = stats.stdev(valueEachDay);
     //standard deviation in euro
     console.log(standardDeviation);
+
 }
 
 function sharpeRatio(portfolio, stocksData) { }
 
 // Step 4: CompoundAnnualGrowthRate
 function compoundAnnualGrowthRate(portfolio, stocksData) {
-
-    const firstSecurityStockData = stocksData[namesToSymbols[portfolio.securities[0].name]];
-    const firstSecurityDates = Object.keys(firstSecurityStockData);
-
-    let datePos = firstSecurityDates.length - 1;
-    let startDate = firstSecurityDates[datePos];
-    let dateInAll = false;
     //checks if the date is available in all stocks
-    while (!dateInAll) {
-        dateInAll = true;
-        startDate = firstSecurityDates[datePos--];//datePos will be one lower than the actual po if the while stops
-        portfolio.securities.forEach((stock) => {
-            if (!(startDate in stocksData[namesToSymbols[stock.name]])) {
-                dateInAll = false;
-            }
-        });
-        if (datePos == 0) throw "stocksData is not usable";
-    };
-
-    const endDate = firstSecurityDates[0];
+    const usedDates = getDaysAvailableInAll(portfolio, stocksData);
+    const startDate = usedDates[usedDates.length - 1];
+    const endDate = usedDates[0];
     let startValue = 0;
     let endValue = 0;
 
@@ -109,29 +100,16 @@ function compoundAnnualGrowthRate(portfolio, stocksData) {
     return CAGR = (endValue / startValue) ** (1 / yearDif) - 1;
 }
 
-function stockCorrelation(portfolio, stocksData) {
+
+function stockCorrelationAndStandardDeviation(portfolio, stocksData) {
 
     const calculateCorrelation = require("calculate-correlation");
     const stats = require("stats-lite");
     //may need to find starting date and combine all dates
     //need to use dailyinfo
-    //only use dates available in all
-    let usedDates = Object.keys(stocksData[namesToSymbols[portfolio.securities[0].name]]);
-    usedDates.forEach((date) => {
-        let dateInAll = true;
-        portfolio.securities.forEach((stock) => {
-            if (!(date in stocksData[namesToSymbols[stock.name]])) {
-                dateInAll = false;
-            }
-        });
-        if (!dateInAll) {
-            const index = usedDates.indexOf(date);
-            if (index > -1) {
-                usedDates.splice(index, 1);
-            }
-        }
-    });
-
+    //either only use data available in all or use last updated value
+    const usedDates = getDaysAvailableInAll(portfolio, stocksData)//Object.keys(stocksData[namesToSymbols[portfolio.securities[0].name]]);
+    console.log(usedDates);
     const numDays = usedDates.length;
     let valuesOfStock = {};
     let correlations = {};
@@ -140,15 +118,17 @@ function stockCorrelation(portfolio, stocksData) {
     portfolio.securities.forEach((stock) => {
         let lastValue = 0;
         valuesOfStock[stock.name] = [];
-        for (i = 0; i < numDays; i++) {
-            if (usedDates[i] in stocksData[namesToSymbols[stock.name]]) {
-                lastValue = Number(stocksData[namesToSymbols[stock.name]][usedDates[i]]["4. close"]);
-                valuesOfStock[stock.name].push(lastValue);
-            }
+        for (i = numDays - 2; i >= 0; i--) {
+            if (usedDates[i] in stocksData[namesToSymbols[stock.name]] && usedDates[i + 1] in stocksData[namesToSymbols[stock.name]]) {
+                //return in period
+                lastValue = (Number(stocksData[namesToSymbols[stock.name]][usedDates[i]]["4. close"]) / Number(stocksData[namesToSymbols[stock.name]][usedDates[i + 1]]["4. close"])) - 1;
 
+            }
+            valuesOfStock[stock.name].push(lastValue);
         }
 
     });
+    console.log(valuesOfStock);
     //calculate correlation
     for (stock1 of portfolio.securities) {
         for (stock2 of portfolio.securities) {
@@ -168,16 +148,32 @@ function stockCorrelation(portfolio, stocksData) {
     });
 
     console.log(standardDeviation);
-    //console.log(valuesOfStock);
     console.log(correlations);
-
 
 }
 
+function getDaysAvailableInAll(portfolio, stocksData) {
+    let usedDates = Object.keys(stocksData[namesToSymbols[portfolio.securities[0].name]]);
+    usedDates.forEach((date) => {
+        let dateInAll = true;
+        portfolio.securities.forEach((stock) => {
+            if (!(date in stocksData[namesToSymbols[stock.name]])) {
+                dateInAll = false;
+            }
+        });
+        if (!dateInAll) {
+            const index = usedDates.indexOf(date);
+            if (index > -1) {
+                usedDates.splice(index, 1);
+            }
+        }
+    });
+    return usedDates;
+}
 
 function getCorrelationKey(stock1, stock2) {
     if (stock1.name < stock2.name) return stock1.name + "to" + stock2.name;
-    else return stock2.name + "to" + stock1.name;
+    else return stock2.name + " to " + stock1.name;
 }
 
 // Step 5: Performance in Best and Worst Year
@@ -192,4 +188,4 @@ exports.sharpeRatio = sharpeRatio;
 exports.performanceBestYear = performanceBestYear;
 exports.performanceWorstYear = performanceWorstYear;
 exports.compoundAnnualGrowthRate = compoundAnnualGrowthRate;
-exports.stockCorrelation = stockCorrelation;
+exports.stockCorrelationAndStandardDeviation = stockCorrelationAndStandardDeviation;
