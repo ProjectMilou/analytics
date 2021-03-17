@@ -51,7 +51,8 @@ const getTimeSeriesDaily = async (symbol) => {
     const TIME_SERIES_DAILY_QUERY = querystring.stringify({
         apikey: apikey,
         symbol: symbol,
-        function: "TIME_SERIES_DAILY"
+        function: "TIME_SERIES_DAILY",
+        outputsize: "full"
     });
 
     console.log(TIME_SERIES_DAILY_QUERY);
