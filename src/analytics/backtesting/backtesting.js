@@ -360,10 +360,11 @@ function mdd(portfolio, stocksData) {
 
             return years;
         }
-
-        exports.finalPortfolioBalance = finalPortfolioBalance;
-        exports.mdd = mdd;
-        exports.standardDeviation = standardDeviation;
-        exports.sharpeRatio = sharpeRatio;
-        exports.compoundAnnualGrowthRate = compoundAnnualGrowthRate;
-        exports.stockCorrelationAndStandardDeviation = stockCorrelationAndStandardDeviation;
+    }
+}
+exports.finalPortfolioBalance = finalPortfolioBalance;
+exports.mdd = mdd;
+exports.standardDeviation = standardDeviation;
+exports.sharpeRatio = sharpeRatio;
+exports.compoundAnnualGrowthRate = compoundAnnualGrowthRate;
+exports.stockCorrelationAndStandardDeviation = stockCorrelationAndStandardDeviation;
