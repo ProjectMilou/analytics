@@ -6,7 +6,8 @@
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "start": "node src/index.js",
-        "portfolioTest": "node src/analytics/analytics.js"
+        "portfolioTest": "node src/analytics/analytics.js",
+        "pythonTest": "node src/analytics/pythonTest.js"
     },
     "repository": {
         "type": "git",
@@ -22,6 +23,7 @@
     },
     "homepage": "https://github.com/ProjectMilou/analytics#readme",
     "dependencies": {
+        "await-spawn": "^4.0.1",
         "axios": "^0.21.1",
         "dotenv": "^8.2.0",
         "querystring": "^0.2.1"
