@@ -13,7 +13,9 @@ async function testIntraday() {
 
 async function testDaily() {
     try {
-        const data = await api.getTimeSeriesDaily("IBM");
+        const data = await api.getTimeSeriesDaily("TSLA");
+
+
         console.log(data);
     } catch (err) {
         console.log(err);
@@ -22,8 +24,10 @@ async function testDaily() {
 
 async function testWeekly() {
     try {
-        const data = await api.getTimeSeriesWeekly("BAYRY");
-        console.log(data);
+        const data = await api.getTimeSeriesWeekly("BAS.FRK");
+        /*entering new data
+        
+        */
     } catch (err) {
         console.log(err);
     }
@@ -31,7 +35,11 @@ async function testWeekly() {
 
 async function testMonthly() {
     try {
-        const data = await api.getTimeSeriesMonthly("IBM");
+        const data = await api.getTimeSeriesMonthly("BAYRY");
+        const fs = require("fs");
+        fs.writeFile('./symbolMonthlyData/BAYRY.json', JSON.stringify(data, null, 2), (err) => {
+            if (err) console.log('Error writing file:', err)
+        });
         console.log(data);
     } catch (err) {
         console.log(err);
@@ -49,7 +57,7 @@ async function testCompanyOverview() {
 
 async function testSymbolSearch() {
     try {
-        const data = await api.getSymbolForKeyword("BASF SE NA O.N.");
+        const data = await api.getSymbolForKeyword("BAS.FRK");
         console.log(data);
     } catch (err) {
         console.log(err);
@@ -61,6 +69,6 @@ async function testSymbolSearch() {
 //testIntraday();
 //testDaily();
 //testWeekly();
-//testMonthly();
+testMonthly();
 //testCompanyOverview();
 //testSymbolSearch();
