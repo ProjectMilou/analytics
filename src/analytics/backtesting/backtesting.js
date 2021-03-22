@@ -1,5 +1,7 @@
 // Just an example of how this file could look like
 
+const { fstat } = require("fs");
+
 /*
 stocksData = 
 {
@@ -72,12 +74,32 @@ function standardDeviation(portfolio, stocksData) {
     }
     const stats = require("stats-lite");
     const standardDeviation = stats.stdev(valueEachDay);
-    //standard deviation in euro
-    console.log(standardDeviation);
+
+    return (standardDeviation);
 
 }
 
-function sharpeRatio(portfolio, stocksData) { }
+function sharpeRatio(portfolio, stocksData) {
+    const usedDates = getDaysAvailableInAll(portfolio, stocksData);
+    const startDate = usedDates[usedDates.length - 1];
+    const endDate = usedDates[0];
+    let startValue = 0;
+    let endValue = 0;
+
+    portfolio.securities.forEach((stock) => {
+        startValue += stocksData[namesToSymbols[stock.name]][startDate]["4. close"] * stock.quantityNominal;
+        endValue += stocksData[namesToSymbols[stock.name]][endDate]["4. close"] * stock.quantityNominal;
+    });
+
+    const returnRate = endValue / startValue;
+    //saves riskfreeRate on Backtesting start
+    const riskFreeRateStartDate = getRiskFreeRateOnDate("2023-01-01") / 100 + 1;
+    //calcs time period of Backtesting
+    const yearDif = (new Date(endDate) - new Date(startDate)) / 1000 / 60 / 60 / 24 / 365;
+    const accumulatedRiskFreeRate = riskFreeRateStartDate ** yearDif;
+
+    return sharpeRatio = (returnRate - accumulatedRiskFreeRate) / standardDeviation(portfolio, stocksData);
+}
 
 // Step 4: CompoundAnnualGrowthRate
 function compoundAnnualGrowthRate(portfolio, stocksData) {
@@ -99,7 +121,6 @@ function compoundAnnualGrowthRate(portfolio, stocksData) {
 
 
 function stockCorrelationAndStandardDeviation(portfolio, stocksData) {
-
     const calculateCorrelation = require("calculate-correlation");
     const stats = require("stats-lite");
     //may need to find starting date and combine all dates
@@ -142,11 +163,9 @@ function stockCorrelationAndStandardDeviation(portfolio, stocksData) {
 
     });
 
-    console.log(standardDeviation);
-    console.log(correlations);
-
 }
 
+//returns all dates available for every Stock
 function getDaysAvailableInAll(portfolio, stocksData) {
     let usedDates = Object.keys(stocksData[namesToSymbols[portfolio.securities[0].name]]);
     usedDates.forEach((date) => {
@@ -170,6 +189,34 @@ function getCorrelationKey(stock1, stock2) {
     if (stock1.name < stock2.name) return stock1.name + "to" + stock2.name;
     else return stock2.name + " to " + stock1.name;
 }
+
+//returns RiskFree Rate on the date if it is defined
+function getRiskFreeRateOnDate(date) {
+    const fs = require("fs");
+
+    const datesInterest = fs.readFileSync("C:/Users/waiho/Milou/analytics/RiskFreeInterest/Rates.json");
+    const rates = JSON.parse(datesInterest);
+    const latestDefinedDate = latestDefinedDateForRiskFree();
+    if (new Date(date) > new Date(latestDefinedDate)) { return rates[latestDefinedDate] }
+    else return rates[date];
+}
+
+function latestDefinedDateForRiskFree() {
+    const fs = require("fs");
+    const datesInterest = fs.readFileSync("C:/Users/waiho/Milou/analytics/RiskFreeInterest/Rates.json");
+    const rates = JSON.parse(datesInterest);
+
+    const allDates = Object.keys(rates);
+    let latestDate = "";
+    for (i = 0; i < allDates.length; i++) {
+        if (rates[allDates[i]] != undefined) {
+            latestDate = allDates[i];
+        }
+    }
+    return latestDate;
+}
+
+
 
 // Step 5: Performance in Best and Worst Year
 function performanceBestYear(portfolio, stocksData) { }

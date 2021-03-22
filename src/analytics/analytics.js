@@ -76,9 +76,10 @@ if (portfolio) {
     // Step 2: Call the backtesting algorithm
 
     //backtesting.maxDrawdown(portfolio, stocksData);
-    console.log(backtesting.compoundAnnualGrowthRate(portfolio, stocksData));
+    backtesting.compoundAnnualGrowthRate(portfolio, stocksData);
     backtesting.stockCorrelationAndStandardDeviation(portfolio, stocksData);
     backtesting.standardDeviation(portfolio, stocksData);
+    console.log(backtesting.sharpeRatio(portfolio, stocksData));
     // Step 3: If no errors => return results
 }
 
@@ -108,4 +109,20 @@ function extractSymbolsFromPortfolio(portfolio) {
         symbols.push(namesToSymbols[element.name]);
     });
     return symbols;
+}
+
+function inputRiskFreeInterest() {
+    //create RiskFreeInterestJson
+
+    // Reads the file and saves it in a string.
+    const string = fs.readFileSync("C:/Users/waiho/Milou/analytics/RiskFreeInterest/TreasuryBond.csv", "utf8");
+    const lines = string.split("\n");
+    let datesInterest = {};
+    for (var i = 1; i < lines.length; i++) {
+        let currentLine = lines[i].split(",");
+        datesInterest[currentLine[0]] = Number(currentLine[1]);
+    }
+    fs.writeFile("C:/Users/waiho/Milou/analytics/RiskFreeInterest/Rates.json", JSON.stringify(datesInterest, null, 2), (err) => {
+        if (err) console.log('Error writing file:', err)
+    });
 }
