@@ -38,7 +38,7 @@ if (portfolio) {
     // Step 1.1: If we have a Database available try to get the data from there.
     // If the data that we are looking for doesn't exist there -> call api.
 
-    //fetchStocksForPortfolio(portfolio, symbols);
+    //fetchStocksForSymbols(symbols);
 
     let stocksData = {};
     try {
@@ -47,7 +47,7 @@ if (portfolio) {
                 `./symbolWeeklyData/${symbol}.json`
             );
             const dataForSymbol = JSON.parse(jsonString);
-            const weeklyData = dataForSymbol["Time Series (Daily)"];
+            const weeklyData = dataForSymbol["Weekly Time Series"];
             let filteredData = {};
 
             // Filter by the fromDate and endDate
@@ -76,11 +76,12 @@ if (portfolio) {
     // Step 2: Call the backtesting algorithm
 
     //backtesting.maxDrawdown(portfolio, stocksData);
-    backtesting.compoundAnnualGrowthRate(portfolio, stocksData);
+    console.log(backtesting.compoundAnnualGrowthRate(portfolio, stocksData));
     backtesting.stockCorrelationAndStandardDeviation(portfolio, stocksData);
-    backtesting.standardDeviation(portfolio, stocksData);
+    console.log(backtesting.standardDeviation(portfolio, stocksData));
     console.log(backtesting.sharpeRatio(portfolio, stocksData));
     // Step 3: If no errors => return results
+
 }
 
 function fetchStocksForSymbols(symbols) {

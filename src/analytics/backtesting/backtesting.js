@@ -1,6 +1,7 @@
 // Just an example of how this file could look like
 
 const { fstat } = require("fs");
+const fs = require("fs");
 
 /*
 stocksData = 
@@ -185,9 +186,8 @@ function getCorrelationKey(stock1, stock2) {
 
 //returns RiskFree Rate on the date if it is defined
 function getRiskFreeRateOnDate(date) {
-    const fs = require("fs");
 
-    const datesInterest = fs.readFileSync("C:/Users/waiho/Milou/analytics/RiskFreeInterest/Rates.json");
+    const datesInterest = fs.readFileSync(".//RiskFreeInterest/Rates.json");
     const rates = JSON.parse(datesInterest);
     const latestDefinedDate = latestDefinedDateForRiskFree();
     if (new Date(date) > new Date(latestDefinedDate)) { return rates[latestDefinedDate] }
@@ -195,8 +195,7 @@ function getRiskFreeRateOnDate(date) {
 }
 
 function latestDefinedDateForRiskFree() {
-    const fs = require("fs");
-    const datesInterest = fs.readFileSync("C:/Users/waiho/Milou/analytics/RiskFreeInterest/Rates.json");
+    const datesInterest = fs.readFileSync("./RiskFreeInterest/Rates.json");
     const rates = JSON.parse(datesInterest);
 
     const allDates = Object.keys(rates);
