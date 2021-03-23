@@ -1,6 +1,7 @@
 const fs = require("fs");
 const api = require("./api/alphaVantage");
 const analytics = require("./analytics/analytics");
+const diversification = require("./analytics/javascript-analysis/diversification");
 
 
 // Can be compared like fromDate < toDate or fromDate > toDate
@@ -14,29 +15,41 @@ const toDate = new Date("2018-12-31");
 const namesToSymbols = {
     Tesla: "TSLA",
     Bayer: "BAYRY",
-    "BASF SE NA O.N.": "BAS"
+    "BASF SE NA O.N.": "BAS",
+    Apple: "AAPL",
+    Amazon: "AMZN",
+    Google: "GOOGL",
+    IBM: "IBM",
+    "Alibaba group": "BABA",
+    "JPMorgan Chase & Co.": "JPM"
 };
 
 
 let portfolio = readPortfolio("Demo_Portfolio_1.json")
+let portfolioDivers = readPortfolio("Demo_Portfolio_2.json")
 
-if (!portfolio) {
+if (!portfolio || !portfolioDivers) {
     console.log("Could not read portfolio")
 }
 
+
 const symbols = extractSymbolsFromPortfolio(portfolio);
+const symbolsDivers = extractSymbolsFromPortfolio(portfolioDivers);
 
 // Step 1: Fetch data for all of the stocks that are bought for a given TIME PERIOD
 // Step 1.1: If we have a Database available try to get the data from there.
 // If the data that we are looking for doesn't exist there -> call api.
 
-//fetchStocksForSymbols(symbols);
+//fetchStocksForSymbols(symbolsDivers);
 
 let stocksData = readSymbolDataAndFilterByDates(symbols);
+let symbolCompanyOverview = readCompanyOverviewsBySymbols(symbolsDivers);
+
 const result = analytics.backtest(portfolio, stocksData)
 console.log(result);
 
-
+const resultFromDiversification = diversification.getDiversification(portfolioDivers, symbolCompanyOverview);
+console.log(resultFromDiversification)
 
 
 
@@ -48,10 +61,10 @@ function fetchStocksForSymbols(symbols) {
     // const dataForSymbols = {};
 
     symbols.forEach((symbol) => {
-        api.getTimeSeriesWeekly(symbol)
+        api.getCompanyOverview(symbol)
             .then((data) => {
                 fs.writeFileSync(
-                    `./data/symbolWeeklyData/${symbol}.json`,
+                    `./data/companyOverview/${symbol}.json`,
                     JSON.stringify(data)
                 );
 
@@ -61,6 +74,7 @@ function fetchStocksForSymbols(symbols) {
             .catch((err) => {
                 console.log(err);
             });
+        console.log(`Data for ${symbol}.json was written successfully\n`)
     });
 }
 
@@ -141,4 +155,20 @@ function readSymbolDataAndFilterByDates(symbols) {
     }
 
     return stocksData;
+}
+
+function readCompanyOverviewsBySymbols(symbols) {
+    let symbolCompanyOverviews = {}
+    try {
+        symbols.forEach(symbol => {
+            const jsonString = fs.readFileSync(
+                `./data/companyOverview/${symbol}.json`
+            );
+            const companyOverview = JSON.parse(jsonString);
+            symbolCompanyOverviews[symbol] = companyOverview;
+        });
+    } catch (err) {
+        console.log(err)
+    }
+    return symbolCompanyOverviews;
 }

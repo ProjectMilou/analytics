@@ -1,0 +1,58 @@
+{
+    "securities": [
+        {
+            "id": 1804725,
+            "accountId": 1289867,
+            "name": "Apple",
+            "quantityNominal": 2,
+            "quantityNominalType": "UNIT",
+            "profitOrLoss": null
+        },
+        {
+            "id": 1804725,
+            "accountId": 1289867,
+            "name": "Google",
+            "quantityNominal": 4,
+            "quantityNominalType": "UNIT",
+            "profitOrLoss": null
+        },
+        {
+            "id": 1804725,
+            "accountId": 1289867,
+            "name": "Amazon",
+            "quantityNominal": 2,
+            "quantityNominalType": "UNIT",
+            "profitOrLoss": null
+        },
+        {
+            "id": 1804725,
+            "accountId": 1289867,
+            "name": "IBM",
+            "quantityNominal": 3,
+            "quantityNominalType": "UNIT",
+            "profitOrLoss": null
+        },
+        {
+            "id": 1804725,
+            "accountId": 1289867,
+            "name": "Alibaba group",
+            "quantityNominal": 2,
+            "quantityNominalType": "UNIT",
+            "profitOrLoss": null
+        },
+        {
+            "id": 1804725,
+            "accountId": 1289867,
+            "name": "JPMorgan Chase & Co.",
+            "quantityNominal": 8,
+            "quantityNominalType": "UNIT",
+            "profitOrLoss": null
+        }
+    ],
+    "paging": {
+        "page": 1,
+        "perPage": 20,
+        "pageCount": 1,
+        "totalCount": 1
+    }
+}
