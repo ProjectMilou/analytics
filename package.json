@@ -25,6 +25,7 @@
         "axios": "^0.21.1",
         "calculate-correlation": "^1.2.1",
         "dotenv": "^8.2.0",
+        "fs": "0.0.1-security",
         "querystring": "^0.2.1",
         "stats-lite": "^2.2.0"
     },
