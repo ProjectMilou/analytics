@@ -1,113 +1,27 @@
-/* This file should later on be transformed to an entry point for backtesting
-    portfolio evaluation, optimization and analysing.
-*/
-const fs = require("fs");
-const api = require("../api/alphaVantage");
-const backtesting = require("./backtesting/backtesting");
+// Entry point for any analytics
 
-// Can be compared like fromDate < toDate or fromDate > toDate
-// Equality can be compared like fromDate.getTime() === toDate.getTime()
-const fromDate = new Date("2015-01-01");
-const toDate = new Date("2018-12-31");
+const backtesting = require('./backtesting/backtesting')
 
-// Used Google and Symbol Search from AlphaVantageAPI
-// Used for mapping Names to Symbols in extractSymbolsFromPortfolio()
-const namesToSymbols = {
-    Tesla: "TSLA",
-    Bayer: "BAYRY",
-    "BASF SE NA O.N.": "BAS.FRK"
-};
-
-let portfolio;
-
-try {
-    // Reads the file and saves it in a string.
-    const jsonString = fs.readFileSync("./examples/Demo_Portfolio_1.json");
-    // Converts the JSON String to a JavaScript object.
-    portfolio = JSON.parse(jsonString);
-} catch (err) {
-    console.log(err);
-    return;
-}
-
-if (portfolio) {
-    // Implement backtesting...
-    const symbols = extractSymbolsFromPortfolio(portfolio);
-
-    // Step 1: Fetch data for all of the stocks that are bought for a given TIME PERIOD
-    // Step 1.1: If we have a Database available try to get the data from there.
-    // If the data that we are looking for doesn't exist there -> call api.
-
-    //fetchStocksForSymbols(symbols);
-    let stocksData = {};
-    try {
-        symbols.forEach((symbol) => {
-            const jsonString = fs.readFileSync(
-                `./symbolWeeklyData/${symbol}.json`
-            );
-            const dataForSymbol = JSON.parse(jsonString);
-            const weeklyData = dataForSymbol["Time Series (Daily)"];
-            let filteredData = {};
-
-            // Filter by the fromDate and endDate
-            for (const [key, value] of Object.entries(weeklyData)) {
-                // Create a date from the key of the object
-                // The key would be something like : "2021-03-08". Check time_series_weekly.json
-                const currentDate = new Date(key);
-
-                // Check whether the current date is between the given From- and
-                // ToDate or whether it is exactly on the same day
-                if (currentDate >= fromDate && currentDate <= toDate) {
-                    // add the data to a local variable
-                    filteredData[key] = value;
-                }
-            }
-
-            stocksData[symbol] = filteredData;
-        });
-    } catch (err) {
-        console.log(err);
-    }
-    // Step 2: Call the backtesting algorithm
-    const mdd = backtesting.mdd(portfolio, stocksData);
-
-    console.log(mdd);
-
-    //const BWY = backtesting.bestAndWorstYear(portfolio, stocksData);
-    //console.log(BWY);
+function backtest(portfolio, stocksData) {
+    const MDD = backtesting.mdd(portfolio, stocksData);
     const BWY = backtesting.bestAndWorstYear(portfolio, stocksData);
-    console.log(BWY);
-    //here I must print my result
     const FPV = backtesting.finalPortfolioBalance(portfolio, stocksData);
-    console.log(FPV);
 
-    // Step 3: If no errors => return results
+    const CAGR = backtesting.compoundAnnualGrowthRate(portfolio, stocksData);
+    backtesting.stockCorrelationAndStandardDeviation(portfolio, stocksData);
+    const standardDeviation = backtesting.standardDeviation(portfolio, stocksData);
+    const sharpeRatio = backtesting.sharpeRatio(portfolio, stocksData);
+
+    const backTestedPortfolio = {
+        ...MDD,
+        ...BWY,
+        ...FPV,
+        CAGR,
+        standardDeviation,
+        sharpeRatio
+    }
+
+    return backTestedPortfolio
 }
 
-function fetchStocksForSymbols(symbols) {
-    // const dataForSymbols = {};
-
-    symbols.forEach((symbol) => {
-        api.getTimeSeriesDaily(symbol)
-            .then((data) => {
-                fs.writeFileSync(
-                    `./symbolWeeklyData/${symbol}.json`,
-                    JSON.stringify(data)
-                );
-
-                // Probably before saving the data in an object we can filter it by the dates
-                // dataForSymbols[symbol] = data;
-            })
-            .catch((err) => {
-                console.log(err);
-            });
-    });
-}
-
-function extractSymbolsFromPortfolio(portfolio) {
-    const symbols = [];
-    portfolio.securities.forEach((element) => {
-        symbols.push(namesToSymbols[element.name]);
-    });
-    return symbols;
-}
+exports.backtest = backtest;
