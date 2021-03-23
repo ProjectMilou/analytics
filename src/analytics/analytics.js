@@ -15,7 +15,7 @@ const toDate = new Date("2020-12-31");
 const namesToSymbols = {
     Tesla: "TSLA",
     Bayer: "BAYRY",
-    "BASF SE NA O.N.": "BAS.FRK"
+    "BASF SE NA O.N.": "BAS"
 };
 
 let portfolio;
@@ -38,7 +38,8 @@ if (portfolio) {
     // Step 1.1: If we have a Database available try to get the data from there.
     // If the data that we are looking for doesn't exist there -> call api.
 
-    //fetchStocksForSymbols(symbols);
+    //fetchStocksForPortfolio(portfolio, symbols);
+
     let stocksData = {};
     try {
         symbols.forEach((symbol) => {
@@ -73,17 +74,6 @@ if (portfolio) {
 
 
     // Step 2: Call the backtesting algorithm
-    const mdd = backtesting.mdd(portfolio, stocksData);
-
-    //console.log(mdd);
-
-    //const BWY = backtesting.bestAndWorstYear(portfolio, stocksData);
-    //console.log(BWY);
-    const BWY = backtesting.bestAndWorstYear(portfolio, stocksData);
-    //console.log(BWY);
-    //here I must print my result
-    const FPV = backtesting.finalPortfolioBalance(portfolio, stocksData);
-    console.log(FPV);
 
     //backtesting.maxDrawdown(portfolio, stocksData);
     backtesting.compoundAnnualGrowthRate(portfolio, stocksData);
@@ -97,7 +87,7 @@ function fetchStocksForSymbols(symbols) {
     // const dataForSymbols = {};
 
     symbols.forEach((symbol) => {
-        api.getTimeSeriesDaily(symbol)
+        api.getTimeSeriesWeekly(symbol)
             .then((data) => {
                 fs.writeFileSync(
                     `./symbolWeeklyData/${symbol}.json`,
