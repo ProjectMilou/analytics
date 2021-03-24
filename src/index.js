@@ -45,8 +45,8 @@ const symbolsDivers = extractSymbolsFromPortfolio(portfolioDivers);
 let stocksData = readSymbolDataAndFilterByDates(symbols);
 let symbolCompanyOverview = readCompanyOverviewsBySymbols(symbolsDivers);
 
-const result = analytics.backtest(portfolio, stocksData)
-console.log(result);
+const backtestResult = analytics.backtest(portfolio, stocksData)
+console.log(backtestResult);
 
 const resultFromDiversification = diversification.getDiversification(portfolioDivers, symbolCompanyOverview);
 console.log(resultFromDiversification)

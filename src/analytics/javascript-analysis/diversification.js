@@ -10,6 +10,19 @@ const namesToSymbols = {
     "JPMorgan Chase & Co.": "JPM"
 };
 
+/**
+ * Returns the distribution of a portfolio over different 
+ * industries, countries, currencies, asset classes and sectors.
+ * @param {object} portfolio Portfolio from finAPI
+ * @param {{symbol1: {}, symbolN: {}}} symbolCompanyOverview 
+ * @returns {{
+ * industries: {industry: number},
+ * countries: {country: number}
+ * currencies: {currency: number},
+ * assetClasses: {assetClass: number},
+ * sectors: {sector: number}
+ * }} Diversification among different criterion
+ */
 function getDiversification(portfolio, symbolCompanyOverview) {
     let symbolsToQuantity = {};
 
