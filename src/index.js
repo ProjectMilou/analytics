@@ -2,6 +2,7 @@ const fs = require("fs");
 const api = require("./api/alphaVantage");
 const analytics = require("./analytics/analytics");
 const diversification = require("./analytics/javascript-analysis/diversification");
+const stockStandardDeviationAndCorrelation = require("./analytics/javascript-analysis/stockStandardDeviationAndCorrelation");
 
 
 // Can be compared like fromDate < toDate or fromDate > toDate
@@ -51,9 +52,7 @@ console.log(backtestResult);
 const resultFromDiversification = diversification.getDiversification(portfolioDivers, symbolCompanyOverview);
 console.log(resultFromDiversification)
 
-
-
-
+stockStandardDeviationAndCorrelation.standardDeviationAndCorrelation(portfolio, stocksData);
 
 // HELPER FUNCTIONS :)
 

@@ -16,7 +16,6 @@ function backtest(portfolio, stocksData) {
     const FPV = backtesting.finalPortfolioBalance(portfolio, stocksData);
 
     const CAGR = backtesting.compoundAnnualGrowthRate(portfolio, stocksData);
-    backtesting.stockCorrelationAndStandardDeviation(portfolio, stocksData);
     const standardDeviation = backtesting.standardDeviation(portfolio, stocksData);
     const sharpeRatio = backtesting.sharpeRatio(portfolio, stocksData);
 
