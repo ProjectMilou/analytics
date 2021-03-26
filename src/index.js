@@ -7,8 +7,8 @@ const stockStandardDeviationAndCorrelation = require("./analytics/javascript-ana
 
 // Can be compared like fromDate < toDate or fromDate > toDate
 // Equality can be compared like fromDate.getTime() === toDate.getTime()
-const fromDate = new Date("2015-01-01");
-const toDate = new Date("2018-12-31");
+const fromDate = new Date("2017-01-01");
+const toDate = new Date("2020-01-01");
 
 
 // Used Google and Symbol Search from AlphaVantageAPI

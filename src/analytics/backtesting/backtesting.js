@@ -275,9 +275,7 @@ function sharpeRatio(portfolio, stocksData) {
     //calcs time period of Backtesting
     const volatility = standardDeviation(portfolio, stocksData) * Math.sqrt(252);
 
-    return (sharpeRatio =
-        (returnRate - riskFreeRateStartDate) /
-        volatility);
+    return (returnRate - riskFreeRateStartDate) / volatility;
 }
 
 function compoundAnnualGrowthRate(portfolio, stocksData) {
@@ -296,7 +294,6 @@ function compoundAnnualGrowthRate(portfolio, stocksData) {
             stocksData[namesToSymbols[stock.name]][endDate]["4. close"] *
             stock.quantityNominal;
     });
-
 
     const yearDif =
         (new Date(endDate) - new Date(startDate)) / 1000 / 60 / 60 / 24 / 365;

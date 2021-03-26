@@ -58,7 +58,6 @@ function standardDeviationAndCorrelation(portfolio, stocksData) {
         volatility[stock.name] = stats.stdev(valuesOfStock[stock.name]) * Math.sqrt(252);
     });
 
-
     return AnnualizedVolatilityAndCorrelation = {
         volatility,
         correlations
@@ -66,12 +65,16 @@ function standardDeviationAndCorrelation(portfolio, stocksData) {
 }
 
 function sharpeRatioStocks(portfolio, stocksData) {
-    const usedDates = backtesting.getDaysAvailableInAll(portfolio, stocksData);
-
+    const usedDates = backtesting.getDaysAvailableInAll(portfolio, stocksData)
     const volatility = standardDeviationAndCorrelation(portfolio, stocksData).volatility;
     const riskFreeRate = backtesting.getRiskFreeRateOnDate(usedDates[usedDates.length - 1]) / 100;
     const returnOfStocks = returnAnnual(portfolio, stocksData);
-
+    const data = {
+        volatility,
+        riskFreeRate,
+        returnOfStocks
+    }
+    console.log(data);
     let sharpeRatio = {};
     portfolio.securities.forEach((stock) => {
         sharpeRatio[stock.name] = (returnOfStocks[stock.name] - riskFreeRate) / volatility[stock.name];
