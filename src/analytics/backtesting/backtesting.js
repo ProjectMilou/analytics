@@ -229,7 +229,7 @@ function bestAndWorstYear(portfolio, stocksData) {
         }
     };
 }
-
+//need daily data
 function standardDeviation(portfolio, stocksData) {
     const usedDates = Object.keys(
         stocksData[namesToSymbols[portfolio.securities[0].name]]
@@ -263,7 +263,7 @@ function standardDeviation(portfolio, stocksData) {
     const standardDeviation = stats.stdev(valueEachDay);
     return standardDeviation;
 }
-
+//need daily data
 function sharpeRatio(portfolio, stocksData) {
     const usedDates = getDaysAvailableInAll(portfolio, stocksData);
     const startDate = usedDates[usedDates.length - 1];

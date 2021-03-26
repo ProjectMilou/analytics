@@ -8,6 +8,7 @@ const namesToSymbols = {
     "BASF SE NA O.N.": "BAS"
 };
 
+//needs daily data
 function standardDeviationAndCorrelation(portfolio, stocksData) {
     //may need to find starting date and combine all dates
     //need to use dailyinfo
@@ -64,6 +65,7 @@ function standardDeviationAndCorrelation(portfolio, stocksData) {
     }
 }
 
+//needs daily data
 function sharpeRatioStocks(portfolio, stocksData) {
     const usedDates = backtesting.getDaysAvailableInAll(portfolio, stocksData)
     const volatility = standardDeviationAndCorrelation(portfolio, stocksData).volatility;
