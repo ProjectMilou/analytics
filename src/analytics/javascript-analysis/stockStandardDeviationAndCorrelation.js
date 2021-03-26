@@ -1,5 +1,6 @@
 const stats = require("stats-lite");
 const calculateCorrelation = require("calculate-correlation");
+const backtesting = require('../backtesting/backtesting.js');
 
 const namesToSymbols = {
     Tesla: "TSLA",
@@ -11,7 +12,7 @@ function standardDeviationAndCorrelation(portfolio, stocksData) {
     //may need to find starting date and combine all dates
     //need to use dailyinfo
     //either only use data available in all or use last updated value
-    const usedDates = getDaysAvailableInAll(portfolio, stocksData); //Object.keys(stocksData[namesToSymbols[portfolio.securities[0].name]]);
+    const usedDates = backtesting.getDaysAvailableInAll(portfolio, stocksData); //Object.keys(stocksData[namesToSymbols[portfolio.securities[0].name]]);
     const numDays = usedDates.length;
     let valuesOfStock = {};
     let correlations = {};
@@ -26,18 +27,10 @@ function standardDeviationAndCorrelation(portfolio, stocksData) {
                 usedDates[i + 1] in stocksData[namesToSymbols[stock.name]]
             ) {
                 //return in period
-                lastValue =
-                    Number(
-                        stocksData[namesToSymbols[stock.name]][usedDates[i]][
-                        "4. close"
-                        ]
-                    ) /
-                    Number(
-                        stocksData[namesToSymbols[stock.name]][
-                        usedDates[i + 1]
-                        ]["4. close"]
-                    ) -
-                    1;
+                const yesterday = Number(stocksData[namesToSymbols[stock.name]][usedDates[i + 1]]["4. close"])
+                const today = Number(stocksData[namesToSymbols[stock.name]][usedDates[i]]["4. close"])
+                lastValue = (today - yesterday) / yesterday;
+
             }
             valuesOfStock[stock.name].push(lastValue);
         }
@@ -60,39 +53,54 @@ function standardDeviationAndCorrelation(portfolio, stocksData) {
         }
     }
 
-    let standardDeviation = {};
+    let volatility = {};
     portfolio.securities.forEach((stock) => {
-        standardDeviation[stock.name] = stats.stdev(valuesOfStock[stock.name]);
+        volatility[stock.name] = stats.stdev(valuesOfStock[stock.name]) * Math.sqrt(252);
     });
 
-    console.log(valuesOfStock);
 
+    return AnnualizedVolatilityAndCorrelation = {
+        volatility,
+        correlations
+    }
+}
+
+function sharpeRatioStocks(portfolio, stocksData) {
+    const usedDates = backtesting.getDaysAvailableInAll(portfolio, stocksData);
+
+    const volatility = standardDeviationAndCorrelation(portfolio, stocksData).volatility;
+    const riskFreeRate = backtesting.getRiskFreeRateOnDate(usedDates[usedDates.length - 1]) / 100;
+    const returnOfStocks = returnAnnual(portfolio, stocksData);
+
+    let sharpeRatio = {};
+    portfolio.securities.forEach((stock) => {
+        sharpeRatio[stock.name] = (returnOfStocks[stock.name] - riskFreeRate) / volatility[stock.name];
+
+    });
+    return sharpeRatio;
+}
+
+function returnAnnual(portfolio, stocksData) {
+    const usedDates = backtesting.getDaysAvailableInAll(portfolio, stocksData);
+    const startDate = usedDates[usedDates.length - 1];
+    const endDate = usedDates[0];
+    const yearDif = (new Date(endDate) - new Date(startDate)) / 1000 / 60 / 60 / 24 / 365;
+
+    let returns = {};
+    portfolio.securities.forEach((stock) => {
+        const stockReturn =
+            Number(stocksData[namesToSymbols[stock.name]][endDate]["4. close"])
+            / Number(stocksData[namesToSymbols[stock.name]][startDate]["4. close"]);
+
+        returns[stock.name] = stockReturn ** (1 / yearDif) - 1;
+    });
+    return returns;
 }
 
 function getCorrelationKey(stock1, stock2) {
     if (stock1.name < stock2.name) return stock1.name + "to" + stock2.name;
     else return stock2.name + " to " + stock1.name;
 }
-function getDaysAvailableInAll(portfolio, stocksData) {
-    let usedDates = Object.keys(
-        stocksData[namesToSymbols[portfolio.securities[0].name]]
-    );
-    usedDates.forEach((date) => {
-        let dateInAll = true;
-        portfolio.securities.forEach((stock) => {
-            if (!(date in stocksData[namesToSymbols[stock.name]])) {
-                dateInAll = false;
-            }
-        });
-        if (!dateInAll) {
-            const index = usedDates.indexOf(date);
-            if (index > -1) {
-                usedDates.splice(index, 1);
-            }
-        }
-    });
-    return usedDates;
-}
-
 
 exports.standardDeviationAndCorrelation = standardDeviationAndCorrelation;
+exports.sharpeRatioStocks = sharpeRatioStocks;

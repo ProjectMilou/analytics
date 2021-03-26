@@ -257,11 +257,10 @@ function standardDeviation(portfolio, stocksData) {
         });
         sums[i] = sum;
         if (i < numDays - 1) {
-            valueEachDay.push(sums[i + 1] / sum - 1);
+            valueEachDay.push((sum - sums[i + 1]) / sums[i + 1]);
         }
     }
     const standardDeviation = stats.stdev(valueEachDay);
-
     return standardDeviation;
 }
 
@@ -269,29 +268,16 @@ function sharpeRatio(portfolio, stocksData) {
     const usedDates = getDaysAvailableInAll(portfolio, stocksData);
     const startDate = usedDates[usedDates.length - 1];
     const endDate = usedDates[0];
-    let startValue = 0;
-    let endValue = 0;
 
-    portfolio.securities.forEach((stock) => {
-        startValue +=
-            stocksData[namesToSymbols[stock.name]][startDate]["4. close"] *
-            stock.quantityNominal;
-        endValue +=
-            stocksData[namesToSymbols[stock.name]][endDate]["4. close"] *
-            stock.quantityNominal;
-    });
-
-    const returnRate = endValue / startValue;
+    const returnRate = compoundAnnualGrowthRate(portfolio, stocksData);
     //saves riskfreeRate on Backtesting start
-    const riskFreeRateStartDate = getRiskFreeRateOnDate("2023-01-01") / 100 + 1;
+    const riskFreeRateStartDate = getRiskFreeRateOnDate(startDate) / 100;
     //calcs time period of Backtesting
-    const yearDif =
-        (new Date(endDate) - new Date(startDate)) / 1000 / 60 / 60 / 24 / 365;
-    const accumulatedRiskFreeRate = riskFreeRateStartDate ** yearDif;
+    const volatility = standardDeviation(portfolio, stocksData) * Math.sqrt(252);
 
     return (sharpeRatio =
-        (returnRate - accumulatedRiskFreeRate) /
-        standardDeviation(portfolio, stocksData));
+        (returnRate - riskFreeRateStartDate) /
+        volatility);
 }
 
 function compoundAnnualGrowthRate(portfolio, stocksData) {
@@ -310,6 +296,7 @@ function compoundAnnualGrowthRate(portfolio, stocksData) {
             stocksData[namesToSymbols[stock.name]][endDate]["4. close"] *
             stock.quantityNominal;
     });
+
 
     const yearDif =
         (new Date(endDate) - new Date(startDate)) / 1000 / 60 / 60 / 24 / 365;
@@ -414,3 +401,4 @@ exports.standardDeviation = standardDeviation;
 exports.sharpeRatio = sharpeRatio;
 exports.compoundAnnualGrowthRate = compoundAnnualGrowthRate;
 exports.getDaysAvailableInAll = getDaysAvailableInAll;
+exports.getRiskFreeRateOnDate = getRiskFreeRateOnDate;

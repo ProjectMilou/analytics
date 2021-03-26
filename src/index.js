@@ -50,9 +50,9 @@ const backtestResult = analytics.backtest(portfolio, stocksData)
 console.log(backtestResult);
 
 const resultFromDiversification = diversification.getDiversification(portfolioDivers, symbolCompanyOverview);
-console.log(resultFromDiversification)
+//console.log(resultFromDiversification)
 
-stockStandardDeviationAndCorrelation.standardDeviationAndCorrelation(portfolio, stocksData);
+console.log(stockStandardDeviationAndCorrelation.sharpeRatioStocks(portfolio, stocksData));
 
 // HELPER FUNCTIONS :)
 
