@@ -2,7 +2,8 @@ const fs = require("fs");
 const api = require("./api/alphaVantage");
 const analytics = require("./analytics/analytics");
 const diversification = require("./analytics/javascript-analysis/diversification");
-
+const priceEarningRatio = require("./analytics/javascript-analysis/PriceEarningRation");
+const dividendYield = require("./analytics/javascript-analysis/Dividendyield");
 
 // Can be compared like fromDate < toDate or fromDate > toDate
 // Equality can be compared like fromDate.getTime() === toDate.getTime()
@@ -51,9 +52,11 @@ console.log(backtestResult);
 const resultFromDiversification = diversification.getDiversification(portfolioDivers, symbolCompanyOverview);
 console.log(resultFromDiversification)
 
+const resultFromPriceEarningRatio = priceEarningRatio.getPriceEarningRation(portfolioDivers, symbolCompanyOverview);
+console.log(resultFromPriceEarningRatio);
 
-
-
+const resultFromDividendyield = dividendYield.getDividendyield(portfolioDivers, symbolCompanyOverview);
+console.log(resultFromDividendyield);
 
 // HELPER FUNCTIONS :)
 
