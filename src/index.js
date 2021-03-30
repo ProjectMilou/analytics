@@ -6,7 +6,6 @@ const priceEarningRatio = require("./analytics/javascript-analysis/PriceEarningR
 const dividendYield = require("./analytics/javascript-analysis/Dividendyield");
 const stockStandardDeviationAndCorrelation = require("./analytics/javascript-analysis/stockStandardDeviationAndCorrelation");
 const gainLoss = require("./analytics/javascript-analysis/gainLoss")
-const dividendYield = require("./analytics/javascript-analysis/Dividendyield")
 const debtEquity = require("./analytics/javascript-analysis/debt-equity")
 
 
@@ -63,6 +62,9 @@ console.log("\n**************************\n      DIVERSIFICATION\n")
 
 const resultFromDiversification = diversification.getDiversification(portfolioDivers, symbolCompanyOverview);
 console.log(resultFromDiversification)
+
+
+console.log("\n**************************\n      PERatios\n")
 
 const resultFromPriceEarningRatio = priceEarningRatio.getPriceEarningRatio(portfolioDivers, symbolCompanyOverview);
 console.log(resultFromPriceEarningRatio);

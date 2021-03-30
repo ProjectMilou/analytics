@@ -23,7 +23,6 @@ const namesToSymbols = {
 function getPriceEarningRatio(portfolio, symbolCompanyOverview) {
     let peRation = {};
     let totalPEratio = 0;
-    let averagePEration = 0;
     let symbolsToQuantity = {};
 
     let totalQuantity = 0;
@@ -37,7 +36,6 @@ function getPriceEarningRatio(portfolio, symbolCompanyOverview) {
     Object.keys(symbolsToQuantity).forEach((symbol) => {
         symbolsToQuantity[symbol] *= lambda
     });
-    console.log(symbolsToQuantity);
     Object.keys(symbolCompanyOverview).forEach((symbol) => {
 
         peRation[symbol] = symbolCompanyOverview[symbol].PERatio;
