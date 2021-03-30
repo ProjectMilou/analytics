@@ -3,6 +3,9 @@ const api = require("./api/alphaVantage");
 const analytics = require("./analytics/analytics");
 const diversification = require("./analytics/javascript-analysis/diversification");
 const stockStandardDeviationAndCorrelation = require("./analytics/javascript-analysis/stockStandardDeviationAndCorrelation");
+const gainLoss = require("./analytics/javascript-analysis/gainLoss")
+const priceEarningRatio = require("./analytics/javascript-analysis/PriceEarningRation")
+const dividendYield = require("./analytics/javascript-analysis/Dividendyield")
 
 
 // Can be compared like fromDate < toDate or fromDate > toDate
@@ -50,7 +53,14 @@ const backtestResult = analytics.backtest(portfolio, stocksData)
 console.log(backtestResult);
 
 const resultFromDiversification = diversification.getDiversification(portfolioDivers, symbolCompanyOverview);
-//console.log(resultFromDiversification)
+console.log(resultFromDiversification)
+const resultFromPriceEarningRatio = priceEarningRatio.getPriceEarningRation(portfolioDivers, symbolCompanyOverview);
+console.log(resultFromPriceEarningRatio);
+
+const resultFromDividendyield = dividendYield.getDividendyield(portfolioDivers, symbolCompanyOverview);
+console.log(resultFromDividendyield);
+const gainOrLoss = gainLoss.gainOrLossLastYearOrMonth(portfolio, stocksData)
+console.log(gainOrLoss)
 
 console.log(stockStandardDeviationAndCorrelation.sharpeRatioStocks(portfolio, stocksData));
 
