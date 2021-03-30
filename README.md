@@ -15,29 +15,29 @@ Testing the performance of a portfolio over a historical time span
 
 #### Outputs:
 
-| Parameters            | Type                              |
-| --------------------- | --------------------------------- |
-| MDDMaxToMin           | number as String                  |
-| MDDInitialToMin       | number as String                  |
-| dateMax               | Date as String                    |
-| dateMin               | Date as String                    |
-| maxValue              | number as String                  |
-| minValue              | number as String                  |
-| initialValue          | number as String                  |
-| bestYear              | {                                 |
-|                       | changeBest: number as String      |
-|                       | yearBest: Date as String          |
-|                       | growthRateBest: number as String} |
-|                       | }                                 |
-| worstYear             | {                                 |
-| changeWorst           | number as String,                 |
-| yearWorst             | Date as String,                   |
-| growthRateWorst       | number as String                  |
-|                       | }                                 |
-| finalPortfolioBalance | number as String,                 |
-| CAGR                  | number                            |
-| standardDeviation     | number                            |
-| sharpeRatio           | number                            |
+| Parameters            | Type                              | Explanation                                                                                         |
+| --------------------- | --------------------------------- | --------------------------------------------------------------------------------------------------- |
+| MDDMaxToMin           | number as String                  | The maximum drawdown of a portfolio according to the maximum and minimum observed value             |
+| MDDInitialToMin       | number as String                  | The maximum drawdown of a portfolio according to the initial and minimum observed value             |
+| dateMax               | Date as String                    | The date at which the portfolio value was the highest                                               |
+| dateMin               | Date as String                    | The date at which the portfolio value was the lowest                                                |
+| maxValue              | number as String                  | The maximum observed value of the portfolio                                                         |
+| minValue              | number as String                  | The minimum observed value of the portfolio                                                         |
+| initialValue          | number as String                  | The initial value of the portfolio or how much it costed to buy all the stocks at the starting date |
+| bestYear              | {                                 | Best Year performance                                                                               |
+|                       | changeBest: number as String      | The change of the value of the portfolio                                                            |
+|                       | yearBest: Date as String          | The year itself                                                                                     |
+|                       | growthRateBest: number as String} | The growth rate of the portfolio value in this year                                                 |
+|                       | }                                 |                                                                                                     |
+| worstYear             | {                                 | Worst Year performance                                                                              |
+| changeWorst           | number as String,                 | The change of the value of the portfolio                                                            |
+| yearWorst             | Date as String,                   | The year itself                                                                                     |
+| growthRateWorst       | number as String                  | The growth rate of the portfolio value in this year                                                 |
+|                       | }                                 |                                                                                                     |
+| finalPortfolioBalance | number as String,                 | The final portfolio balance (if < 0 => equal ot 0)                                                  |
+| CAGR                  | number                            | Compund Annual Growth Rate of the portfolio                                                         |
+| standardDeviation     | number                            | Standard Deviation                                                                                  |
+| sharpeRatio           | number                            | Sharpe Ratio                                                                                        |
 
 #### Example output:
 
@@ -69,7 +69,7 @@ Testing the performance of a portfolio over a historical time span
 
 ## npm start
 
-Runs index.js which currently performs backtesting on a portfolio and returns the results.
+Performs backtesting, portfolio evaluation and analysis.
 
 ## npm run pythonTest
 
