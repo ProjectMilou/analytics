@@ -2,7 +2,7 @@ const fs = require("fs");
 const api = require("./api/alphaVantage");
 const analytics = require("./analytics/analytics");
 const diversification = require("./analytics/javascript-analysis/diversification");
-const priceEarningRatio = require("./analytics/javascript-analysis/PriceEarningRation");
+const priceEarningRatio = require("./analytics/javascript-analysis/PriceEarningRatio");
 const dividendYield = require("./analytics/javascript-analysis/Dividendyield");
 const gainLoss = require("./analytics/javascript-analysis/gainLoss")
 
@@ -54,7 +54,7 @@ console.log(backtestResult);
 const resultFromDiversification = diversification.getDiversification(portfolioDivers, symbolCompanyOverview);
 console.log(resultFromDiversification)
 
-const resultFromPriceEarningRatio = priceEarningRatio.getPriceEarningRation(portfolioDivers, symbolCompanyOverview);
+const resultFromPriceEarningRatio = priceEarningRatio.getPriceEarningRatio(portfolioDivers, symbolCompanyOverview);
 console.log(resultFromPriceEarningRatio);
 
 const resultFromDividendyield = dividendYield.getDividendyield(portfolioDivers, symbolCompanyOverview);
