@@ -4,6 +4,8 @@
             "id": 1804725,
             "accountId": 1289867,
             "name": "Apple",
+            "quoteDate": "2020-12-31 00:00:00:00.000",
+            "entryQuote": 132.69,
             "quantityNominal": 2,
             "quantityNominalType": "UNIT",
             "profitOrLoss": null
@@ -12,6 +14,8 @@
             "id": 1804725,
             "accountId": 1289867,
             "name": "Google",
+            "quoteDate": "2020-12-31 00:00:00:00.000",
+            "entryQuote": 1752.64,
             "quantityNominal": 4,
             "quantityNominalType": "UNIT",
             "profitOrLoss": null
@@ -20,6 +24,8 @@
             "id": 1804725,
             "accountId": 1289867,
             "name": "Amazon",
+            "quoteDate": "2020-12-31 00:00:00:00.000",
+            "entryQuote": 3256.93,
             "quantityNominal": 2,
             "quantityNominalType": "UNIT",
             "profitOrLoss": null
@@ -28,6 +34,8 @@
             "id": 1804725,
             "accountId": 1289867,
             "name": "IBM",
+            "quoteDate": "2020-12-31 00:00:00:00.000",
+            "entryQuote": 125.88,
             "quantityNominal": 3,
             "quantityNominalType": "UNIT",
             "profitOrLoss": null
@@ -36,6 +44,8 @@
             "id": 1804725,
             "accountId": 1289867,
             "name": "Alibaba group",
+            "quoteDate": "2020-12-31 00:00:00:00.000",
+            "entryQuote": 232.73,
             "quantityNominal": 2,
             "quantityNominalType": "UNIT",
             "profitOrLoss": null
@@ -44,6 +54,8 @@
             "id": 1804725,
             "accountId": 1289867,
             "name": "JPMorgan Chase & Co.",
+            "quoteDate": "2020-12-31 00:00:00:00.000",
+            "entryQuote": 127.07,
             "quantityNominal": 8,
             "quantityNominalType": "UNIT",
             "profitOrLoss": null
