@@ -147,7 +147,7 @@ _ asset classes \* sectors
 
 ```javascript
 {
-  peRation: {
+  PERatios: {
     AAPL: '33.4662',
     GOOGL: '34.6457',
     AMZN: '74.3694',
