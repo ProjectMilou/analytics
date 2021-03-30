@@ -38,8 +38,6 @@ function getDiversification(portfolio, symbolCompanyOverview) {
         symbolsToQuantity[symbol] *= lambda
     });
 
-    console.log(symbolsToQuantity)
-
     let industries = {};
     let countries = {};
     let currencies = {};
