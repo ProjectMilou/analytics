@@ -27,8 +27,11 @@ function getPriceEarningRation(portfolio, symbolCompanyOverview) {
     let averagePEration = 0;
     let totalQuantity = 0;
     Object.keys(symbolCompanyOverview).forEach((symbol) => {
+
+        // Why not PERatio[symbol] ?
         peRation[symbolCompanyOverview[symbol].PERatio] = symbolCompanyOverview[symbol].PERatio;
 
+        // Why iterating through the portfolio for each symbol of company overview ?
         portfolio.securities.forEach((element) => {
             if (namesToSymbols[element.name] === symbolCompanyOverview[symbol].Symbol) {
                 totalPEratio += element.quantityNominal *

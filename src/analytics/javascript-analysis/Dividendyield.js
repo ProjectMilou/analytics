@@ -28,10 +28,18 @@ function getDividendyield(portfolio, symbolCompanyOverview) {
     let totalQuantity = 0;
     Object.keys(symbolCompanyOverview).forEach((symbol) => {
         let content = symbolCompanyOverview[symbol].DividendYield;
+
+        // Adds a string to a number => totalDivdendyield becomes string
         totalDividendyield += content;
+
+        // Why not dividendyield[symbol] ?
         dividendyield[content] = (parseFloat(content) * 100).toFixed(2) + "%";
+
+        // Why iterate through a portfolio for each symbol of company overview ?
         portfolio.securities.forEach((element) => {
             if (namesToSymbols[element.name] === symbolCompanyOverview[symbol].Symbol) {
+
+                // Adding numbers to a string (look line 32, 33 and 26)
                 totalDividendyield += element.quantityNominal *
                     parseFloat(symbolCompanyOverview[symbol].DividendYield);
                 totalQuantity += element.quantityNominal;
@@ -39,6 +47,8 @@ function getDividendyield(portfolio, symbolCompanyOverview) {
         });
     });
     averageDividendyield = totalDividendyield / totalQuantity;
+
+    // Why converting everything to strings ?
     averageDividendyield = (averageDividendyield * 100).toFixed(2) + "%";
     totalDividendyield = (totalDividendyield * 100).toFixed(2) + "%";
     return {
