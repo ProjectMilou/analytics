@@ -54,7 +54,7 @@ function finalPortfolioBalance(portfolio, stocksData) {
         return { totalBalance: 0 };
     }
     return {
-        totalBalance: totalBalance.toFixed(4)
+        finalPortfolioBalance: totalBalance.toFixed(4)
     };
 }
 

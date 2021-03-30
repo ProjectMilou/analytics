@@ -53,6 +53,8 @@ const balanceSheetPerSymbol = readBalanceSheetsBySymbols(symbolsDivers);
 
 console.log("\n**************************\n      BACKTESTING\n")
 
+console.log(`From: ${fromDate.toLocaleDateString()} To: ${toDate.toLocaleDateString()} \n`)
+
 const backtestResult = analytics.backtest(portfolioDivers, stocksData)
 console.log(backtestResult);
 
