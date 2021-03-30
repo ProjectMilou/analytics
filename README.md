@@ -11,7 +11,7 @@ Testing the performance of a portfolio over a historical time span
 | portfolio  | The exact same portfolio, which can be fetched from the finApi                           |
 | stocksData | Daily/Weekly/Monthly Time Series in the from of {symbol: data fetched from AlphaVantage} |
 | fromDate   | Date                                                                                     |
-| startDate  | Date                                                                                     |
+| toDate     | Date                                                                                     |
 
 #### Outputs:
 
