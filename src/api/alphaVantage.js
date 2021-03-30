@@ -19,8 +19,8 @@ if (!apikey) {
 /**
  * Gets the intraday data for a given symbol and time interval from AlphaVantage API directly.
  *
- * @param   {[string]} symbol   represents the stock name (e.g: "IBM")
- * @param   {[string]} interval [allowed values: "1min" | "5min" | "15min" | "30min" | "60min"]
+ * @param   {string} symbol   represents the stock name (e.g: "IBM")
+ * @param   {string} interval [allowed values: "1min" | "5min" | "15min" | "30min" | "60min"]
  * @returns {object}            JavaScript Object
  */
 const getTimeSeriesIntraday = async (symbol, interval) => {
@@ -51,7 +51,8 @@ const getTimeSeriesDaily = async (symbol) => {
     const TIME_SERIES_DAILY_QUERY = querystring.stringify({
         apikey: apikey,
         symbol: symbol,
-        function: "TIME_SERIES_DAILY"
+        function: "TIME_SERIES_DAILY",
+        outputsize: "full"
     });
 
     console.log(TIME_SERIES_DAILY_QUERY);
@@ -165,9 +166,35 @@ const getSymbolForKeyword = async (keyword) => {
     }
 };
 
+/**
+ * Gets the balance sheet of a symbol from the AlphaVantage API
+ * 
+ * @param {string} symbol represents the query string (e.g "Tesla")
+ * @returns This function returns the annual and quarterly balance sheets 
+ * for the company of interest. Data is generally refreshed on the same day
+ * a company reports its latest earnings and financials.
+ */
+const getBalanceSheetForSymbol = async (symbol) => {
+    const BALANCE_SHEET_QUERY = querystring.stringify({
+        apikey: apikey,
+        symbol: symbol,
+        function: "BALANCE_SHEET"
+    });
+
+    console.log(BALANCE_SHEET_QUERY);
+
+    try {
+        const res = await api.get(`query?${BALANCE_SHEET_QUERY}`);
+        return res.data;
+    } catch (err) {
+        throw new Error(err);
+    }
+}
+
 exports.getTimeSeriesIntraday = getTimeSeriesIntraday;
 exports.getTimeSeriesDaily = getTimeSeriesDaily;
 exports.getTimeSeriesWeekly = getTimeSeriesWeekly;
 exports.getTimeSeriesMonthly = getTimeSeriesMonthly;
 exports.getCompanyOverview = getCompanyOverview;
 exports.getSymbolForKeyword = getSymbolForKeyword;
+exports.getBalanceSheetForSymbol = getBalanceSheetForSymbol;
