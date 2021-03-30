@@ -2,12 +2,16 @@
 
 ## Backtesting
 
+Testing the performance of a portfolio over a historical time span
+
 #### Inputs:
 
 | Parameters | Type                                                                                     |
 | ---------- | ---------------------------------------------------------------------------------------- |
 | portfolio  | The exact same portfolio, which can be fetched from the finApi                           |
 | stocksData | Daily/Weekly/Monthly Time Series in the from of {symbol: data fetched from AlphaVantage} |
+| fromDate   | Date                                                                                     |
+| startDate  | Date                                                                                     |
 
 #### Outputs:
 
@@ -37,7 +41,7 @@
 
 #### Example output:
 
-```json
+```javascript
 {
     "MDDMaxToMin": "-0.6242",
     "MDDInitialToMin": "0.0000",
