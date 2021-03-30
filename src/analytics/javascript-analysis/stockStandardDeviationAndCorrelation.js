@@ -5,7 +5,13 @@ const backtesting = require('../backtesting/backtesting.js');
 const namesToSymbols = {
     Tesla: "TSLA",
     Bayer: "BAYRY",
-    "BASF SE NA O.N.": "BAS"
+    "BASF SE NA O.N.": "BAS",
+    Apple: "AAPL",
+    Amazon: "AMZN",
+    Google: "GOOGL",
+    IBM: "IBM",
+    "Alibaba group": "BABA",
+    "JPMorgan Chase & Co.": "JPM"
 };
 
 //needs daily data
@@ -76,7 +82,6 @@ function sharpeRatioStocks(portfolio, stocksData) {
         riskFreeRate,
         returnOfStocks
     }
-    console.log(data);
     let sharpeRatio = {};
     portfolio.securities.forEach((stock) => {
         sharpeRatio[stock.name] = (returnOfStocks[stock.name] - riskFreeRate) / volatility[stock.name];
@@ -103,7 +108,7 @@ function returnAnnual(portfolio, stocksData) {
 }
 
 function getCorrelationKey(stock1, stock2) {
-    if (stock1.name < stock2.name) return stock1.name + "to" + stock2.name;
+    if (stock1.name < stock2.name) return stock1.name + " to " + stock2.name;
     else return stock2.name + " to " + stock1.name;
 }
 

@@ -9,7 +9,13 @@ const rates = JSON.parse(datesInterest);
 const namesToSymbols = {
     Tesla: "TSLA",
     Bayer: "BAYRY",
-    "BASF SE NA O.N.": "BAS"
+    "BASF SE NA O.N.": "BAS",
+    Apple: "AAPL",
+    Amazon: "AMZN",
+    Google: "GOOGL",
+    IBM: "IBM",
+    "Alibaba group": "BABA",
+    "JPMorgan Chase & Co.": "JPM"
 };
 /**
  *It should return the finalPortfolioBalance for a given timespan
@@ -48,7 +54,7 @@ function finalPortfolioBalance(portfolio, stocksData) {
         return { totalBalance: 0 };
     }
     return {
-        totalBalance: totalBalance.toFixed(4)
+        finalPortfolioBalance: totalBalance.toFixed(4)
     };
 }
 
