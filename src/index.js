@@ -2,6 +2,7 @@ const fs = require("fs");
 const api = require("./api/alphaVantage");
 const analytics = require("./analytics/analytics");
 const diversification = require("./analytics/javascript-analysis/diversification");
+const stockStandardDeviationAndCorrelation = require("./analytics/javascript-analysis/stockStandardDeviationAndCorrelation");
 const gainLoss = require("./analytics/javascript-analysis/gainLoss")
 const priceEarningRatio = require("./analytics/javascript-analysis/PriceEarningRation")
 const dividendYield = require("./analytics/javascript-analysis/Dividendyield")
@@ -9,8 +10,8 @@ const dividendYield = require("./analytics/javascript-analysis/Dividendyield")
 
 // Can be compared like fromDate < toDate or fromDate > toDate
 // Equality can be compared like fromDate.getTime() === toDate.getTime()
-const fromDate = new Date("2015-01-01");
-const toDate = new Date();
+const fromDate = new Date("2017-01-01");
+const toDate = new Date("2020-01-01");
 
 
 // Used Google and Symbol Search from AlphaVantageAPI
@@ -61,6 +62,7 @@ console.log(resultFromDividendyield);
 const gainOrLoss = gainLoss.gainOrLossLastYearOrMonth(portfolio, stocksData)
 console.log(gainOrLoss)
 
+console.log(stockStandardDeviationAndCorrelation.sharpeRatioStocks(portfolio, stocksData));
 
 // HELPER FUNCTIONS :)
 
