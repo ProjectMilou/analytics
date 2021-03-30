@@ -4,11 +4,13 @@ const analytics = require("./analytics/analytics");
 const diversification = require("./analytics/javascript-analysis/diversification");
 const priceEarningRatio = require("./analytics/javascript-analysis/PriceEarningRation");
 const dividendYield = require("./analytics/javascript-analysis/Dividendyield");
+const gainLoss = require("./analytics/javascript-analysis/gainLoss")
+
 
 // Can be compared like fromDate < toDate or fromDate > toDate
 // Equality can be compared like fromDate.getTime() === toDate.getTime()
 const fromDate = new Date("2015-01-01");
-const toDate = new Date("2018-12-31");
+const toDate = new Date();
 
 
 // Used Google and Symbol Search from AlphaVantageAPI
@@ -57,6 +59,9 @@ console.log(resultFromPriceEarningRatio);
 
 const resultFromDividendyield = dividendYield.getDividendyield(portfolioDivers, symbolCompanyOverview);
 console.log(resultFromDividendyield);
+const gainOrLoss = gainLoss.gainOrLossLastYearOrMonth(portfolio, stocksData)
+console.log(gainOrLoss)
+
 
 // HELPER FUNCTIONS :)
 
