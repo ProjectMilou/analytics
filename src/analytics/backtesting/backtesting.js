@@ -2,7 +2,6 @@
 
 const fs = require("fs");
 const stats = require("stats-lite");
-const calculateCorrelation = require("calculate-correlation");
 
 
 const datesInterest = fs.readFileSync("./data/RiskFreeInterest/Rates.json");
@@ -10,7 +9,13 @@ const rates = JSON.parse(datesInterest);
 const namesToSymbols = {
     Tesla: "TSLA",
     Bayer: "BAYRY",
-    "BASF SE NA O.N.": "BAS"
+    "BASF SE NA O.N.": "BAS",
+    Apple: "AAPL",
+    Amazon: "AMZN",
+    Google: "GOOGL",
+    IBM: "IBM",
+    "Alibaba group": "BABA",
+    "JPMorgan Chase & Co.": "JPM"
 };
 /**
  *It should return the finalPortfolioBalance for a given timespan
@@ -49,7 +54,7 @@ function finalPortfolioBalance(portfolio, stocksData) {
         return { totalBalance: 0 };
     }
     return {
-        totalBalance: totalBalance.toFixed(4)
+        finalPortfolioBalance: totalBalance.toFixed(4)
     };
 }
 
@@ -230,7 +235,7 @@ function bestAndWorstYear(portfolio, stocksData) {
         }
     };
 }
-
+//need daily data
 function standardDeviation(portfolio, stocksData) {
     const usedDates = Object.keys(
         stocksData[namesToSymbols[portfolio.securities[0].name]]
@@ -258,41 +263,25 @@ function standardDeviation(portfolio, stocksData) {
         });
         sums[i] = sum;
         if (i < numDays - 1) {
-            valueEachDay.push(sums[i + 1] / sum - 1);
+            valueEachDay.push((sum - sums[i + 1]) / sums[i + 1]);
         }
     }
     const standardDeviation = stats.stdev(valueEachDay);
-
     return standardDeviation;
 }
-
+//need daily data
 function sharpeRatio(portfolio, stocksData) {
     const usedDates = getDaysAvailableInAll(portfolio, stocksData);
     const startDate = usedDates[usedDates.length - 1];
     const endDate = usedDates[0];
-    let startValue = 0;
-    let endValue = 0;
 
-    portfolio.securities.forEach((stock) => {
-        startValue +=
-            stocksData[namesToSymbols[stock.name]][startDate]["4. close"] *
-            stock.quantityNominal;
-        endValue +=
-            stocksData[namesToSymbols[stock.name]][endDate]["4. close"] *
-            stock.quantityNominal;
-    });
-
-    const returnRate = endValue / startValue;
+    const returnRate = compoundAnnualGrowthRate(portfolio, stocksData);
     //saves riskfreeRate on Backtesting start
-    const riskFreeRateStartDate = getRiskFreeRateOnDate("2023-01-01") / 100 + 1;
+    const riskFreeRateStartDate = getRiskFreeRateOnDate(startDate) / 100;
     //calcs time period of Backtesting
-    const yearDif =
-        (new Date(endDate) - new Date(startDate)) / 1000 / 60 / 60 / 24 / 365;
-    const accumulatedRiskFreeRate = riskFreeRateStartDate ** yearDif;
+    const volatility = standardDeviation(portfolio, stocksData) * Math.sqrt(252);
 
-    return (sharpeRatio =
-        (returnRate - accumulatedRiskFreeRate) /
-        standardDeviation(portfolio, stocksData));
+    return (returnRate - riskFreeRateStartDate) / volatility;
 }
 
 function compoundAnnualGrowthRate(portfolio, stocksData) {
@@ -317,64 +306,6 @@ function compoundAnnualGrowthRate(portfolio, stocksData) {
     return (CAGR = (endValue / startValue) ** (1 / yearDif) - 1);
 }
 
-function stockCorrelationAndStandardDeviation(portfolio, stocksData) {
-    //may need to find starting date and combine all dates
-    //need to use dailyinfo
-    //either only use data available in all or use last updated value
-    const usedDates = getDaysAvailableInAll(portfolio, stocksData); //Object.keys(stocksData[namesToSymbols[portfolio.securities[0].name]]);
-    const numDays = usedDates.length;
-    let valuesOfStock = {};
-    let correlations = {};
-
-    //put allvalues for each stock in an array
-    portfolio.securities.forEach((stock) => {
-        let lastValue = 0;
-        valuesOfStock[stock.name] = [];
-        for (i = numDays - 2; i >= 0; i--) {
-            if (
-                usedDates[i] in stocksData[namesToSymbols[stock.name]] &&
-                usedDates[i + 1] in stocksData[namesToSymbols[stock.name]]
-            ) {
-                //return in period
-                lastValue =
-                    Number(
-                        stocksData[namesToSymbols[stock.name]][usedDates[i]][
-                        "4. close"
-                        ]
-                    ) /
-                    Number(
-                        stocksData[namesToSymbols[stock.name]][
-                        usedDates[i + 1]
-                        ]["4. close"]
-                    ) -
-                    1;
-            }
-            valuesOfStock[stock.name].push(lastValue);
-        }
-    });
-    //calculate correlation
-    for (stock1 of portfolio.securities) {
-        for (stock2 of portfolio.securities) {
-            if (stock1 == stock2) {
-                break;
-            }
-            const correlationKey = getCorrelationKey(stock1, stock2);
-            if (correlationKey in correlations) {
-                break;
-            } else {
-                correlations[correlationKey] = calculateCorrelation(
-                    valuesOfStock[stock1.name],
-                    valuesOfStock[stock2.name]
-                );
-            }
-        }
-    }
-
-    let standardDeviation = {};
-    portfolio.securities.forEach((stock) => {
-        standardDeviation[stock.name] = stats.stdev(valuesOfStock[stock.name]);
-    });
-}
 
 //returns all dates available for every Stock
 function getDaysAvailableInAll(portfolio, stocksData) {
@@ -398,10 +329,6 @@ function getDaysAvailableInAll(portfolio, stocksData) {
     return usedDates;
 }
 
-function getCorrelationKey(stock1, stock2) {
-    if (stock1.name < stock2.name) return stock1.name + "to" + stock2.name;
-    else return stock2.name + " to " + stock1.name;
-}
 
 //returns RiskFree Rate on the date if it is defined
 function getRiskFreeRateOnDate(date) {
@@ -412,7 +339,6 @@ function getRiskFreeRateOnDate(date) {
 }
 
 function latestDefinedDateForRiskFree() {
-
     const allDates = Object.keys(rates);
     let latestDate = "";
     for (i = 0; i < allDates.length; i++) {
@@ -477,4 +403,5 @@ exports.bestAndWorstYear = bestAndWorstYear;
 exports.standardDeviation = standardDeviation;
 exports.sharpeRatio = sharpeRatio;
 exports.compoundAnnualGrowthRate = compoundAnnualGrowthRate;
-exports.stockCorrelationAndStandardDeviation = stockCorrelationAndStandardDeviation;
+exports.getDaysAvailableInAll = getDaysAvailableInAll;
+exports.getRiskFreeRateOnDate = getRiskFreeRateOnDate;
