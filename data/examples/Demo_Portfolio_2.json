@@ -6,7 +6,7 @@
             "name": "Apple",
             "quoteDate": "2020-12-31 00:00:00:00.000",
             "entryQuote": 132.69,
-            "quantityNominal": 2,
+            "quantityNominal": 20,
             "quantityNominalType": "UNIT",
             "profitOrLoss": null
         },
@@ -36,7 +36,7 @@
             "name": "IBM",
             "quoteDate": "2020-12-31 00:00:00:00.000",
             "entryQuote": 125.88,
-            "quantityNominal": 3,
+            "quantityNominal": 10,
             "quantityNominalType": "UNIT",
             "profitOrLoss": null
         },
@@ -46,7 +46,7 @@
             "name": "Alibaba group",
             "quoteDate": "2020-12-31 00:00:00:00.000",
             "entryQuote": 232.73,
-            "quantityNominal": 2,
+            "quantityNominal": 7,
             "quantityNominalType": "UNIT",
             "profitOrLoss": null
         },
@@ -56,7 +56,7 @@
             "name": "JPMorgan Chase & Co.",
             "quoteDate": "2020-12-31 00:00:00:00.000",
             "entryQuote": 127.07,
-            "quantityNominal": 8,
+            "quantityNominal": 80,
             "quantityNominalType": "UNIT",
             "profitOrLoss": null
         }
