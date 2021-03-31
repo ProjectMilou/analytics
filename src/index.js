@@ -7,7 +7,7 @@ const dividendYield = require("./analytics/javascript-analysis/Dividendyield");
 const stockStandardDeviationAndCorrelation = require("./analytics/javascript-analysis/stockStandardDeviationAndCorrelation");
 const gainLoss = require("./analytics/javascript-analysis/gainLoss")
 const debtEquity = require("./analytics/javascript-analysis/debt-equity")
-
+const { namesToSymbols } = require("./static/names-symbols-mapping")
 
 // Can be compared like fromDate < toDate or fromDate > toDate
 // Equality can be compared like fromDate.getTime() === toDate.getTime()
@@ -17,18 +17,6 @@ const toDate = new Date();
 
 // Used Google and Symbol Search from AlphaVantageAPI
 // Used for mapping Names to Symbols in extractSymbolsFromPortfolio()
-const namesToSymbols = {
-    Tesla: "TSLA",
-    Bayer: "BAYRY",
-    "BASF SE NA O.N.": "BAS",
-    Apple: "AAPL",
-    Amazon: "AMZN",
-    Google: "GOOGL",
-    IBM: "IBM",
-    "Alibaba group": "BABA",
-    "JPMorgan Chase & Co.": "JPM"
-};
-
 
 let portfolio = readPortfolio("Demo_Portfolio_1.json")
 let portfolioDivers = readPortfolio("Demo_Portfolio_2.json")

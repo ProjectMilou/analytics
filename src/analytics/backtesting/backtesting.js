@@ -6,17 +6,7 @@ const stats = require("stats-lite");
 
 const datesInterest = fs.readFileSync("./data/RiskFreeInterest/Rates.json");
 const rates = JSON.parse(datesInterest);
-const namesToSymbols = {
-    Tesla: "TSLA",
-    Bayer: "BAYRY",
-    "BASF SE NA O.N.": "BAS",
-    Apple: "AAPL",
-    Amazon: "AMZN",
-    Google: "GOOGL",
-    IBM: "IBM",
-    "Alibaba group": "BABA",
-    "JPMorgan Chase & Co.": "JPM"
-};
+const { namesToSymbols } = require("../../static/names-symbols-mapping")
 /**
  *It should return the finalPortfolioBalance for a given timespan
  *Core idea: of all symbols of the two given years

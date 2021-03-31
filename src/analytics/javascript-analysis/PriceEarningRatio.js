@@ -1,15 +1,4 @@
-const namesToSymbols = {
-    Tesla: "TSLA",
-    Bayer: "BAYRY",
-    "BASF SE NA O.N.": "BAS",
-    Apple: "AAPL",
-    Amazon: "AMZN",
-    Google: "GOOGL",
-    IBM: "IBM",
-    "Alibaba group": "BABA",
-    "JPMorgan Chase & Co.": "JPM"
-};
-
+const { namesToSymbols } = require("../../static/names-symbols-mapping")
 /**
  * Returns the price-earning and average  ratio from the company overview
  * regarding the quantity of stocks bought

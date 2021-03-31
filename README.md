@@ -1,5 +1,135 @@
 # analytics
 
+## Parameters with examples and explanations
+
+#### stocksData
+
+-   This parameter represents the Time Series Data fetched from **AlphaVantage** for all the stocks which are present in a given portfolio.
+-   It is prefered to have the **DAILIY** Time Series, but Weekly and Monthly is also okay. It won't break the code.
+-   The data is formed in the following way:
+
+```javascript
+{
+  SYMBOL: {
+      DATE: {
+        "1. open": number,
+        "2. high": number,
+        "3. low": number,
+        "4. close": number,
+        "5. volume": number
+      }
+  }
+}
+```
+
+###### Example for stocks data
+
+```javascript
+{
+  AAPL: {
+    '2017-01-27': {
+      '1. open': '120.0000',
+      '2. high': '122.4400',
+      '3. low': '119.5000',
+      '4. close': '121.9500',
+      '5. volume': '124748449'
+    },
+    .
+    .
+    .
+  },
+  .
+  .
+  .,
+  JPM: {
+    '2017-01-27': {
+      '1. open': '83.3000',
+      '2. high': '86.9800',
+      '3. low': '83.2050',
+      '4. close': '86.9300',
+      '5. volume': '73396847'
+    },
+    .
+    .
+    .
+  }
+}
+```
+
+#### symbolCompanyOverview
+
+-   This parameter represents the Company Overview data fetched from **AlphaVantage** for all the stocks which are present in a given portfolio.
+-   The data is formed in the following way:
+
+```javascript
+{
+  SYMBOL: {
+      Symbol: string,
+      AssetType: string,
+      ...
+  }
+}
+```
+
+###### Example for symbolCompanyOverview
+
+```javascript
+{
+ BABA: {
+    Symbol: 'BABA',
+    AssetType: 'Common Stock',
+    Exchange: 'NYSE',
+    Currency: 'USD',
+    Country: 'USA',
+    Sector: 'Consumer Cyclical',
+    Industry: 'Internet Retail',
+    ...,
+    LastSplitFactor: 'None',
+    LastSplitDate: 'None'
+  },
+  JPM: {
+    Symbol: 'JPM',
+    AssetType: 'Common Stock',
+    ...,
+    LastSplitDate: '2000-06-12'
+  }
+}
+
+```
+
+#### balanceSheetPerSymbol
+
+-   This parameter represents the Balance Sheet data fetched from **AlphaVantage** for all the stocks which are present in a given portfolio.
+-   The data is formed in the following way:
+
+```javascript
+{
+  SYMBOL: {
+      symbol: string,
+      annualReports: [object],
+      quarterlyReports: [object]
+  }
+}
+```
+
+###### Example for balanceSheetPerSymbol
+
+```javascript
+{
+  AAPL: {
+    symbol: 'AAPL',
+    annualReports: [Object1, ...ObjectN ],
+    quarterlyReports: [Object1, ...ObjectN]
+  },
+  ...,
+  GOOGL: {
+    symbol: 'GOOGL',
+    annualReports: [ Object1, ...ObjectN ],
+    quarterlyReports: [ Object1, ...ObjectN ]
+  },
+}
+```
+
 ## Backtesting
 
 Testing the performance of a portfolio over a historical time span
@@ -43,38 +173,41 @@ Testing the performance of a portfolio over a historical time span
 
 ```javascript
 {
-    "MDDMaxToMin": "-0.6242",
-    "MDDInitialToMin": "0.0000",
-    "dateMax": "2021-02-05",
-    "dateMin": "2017-01-06",
-    "maxValue": "17333.6900",
-    "minValue": "6513.9700",
-    "initialValue": "6513.9700",
-    "bestYear": {
-        "changeBest": "3914.8400",
-        "yearBest": "2020",
-        "growthRateBest": "0.3336"
-    },
-    "worstYear": {
-        "changeWorst": "-137.9000",
-        "yearWorst": "2018",
-        "growthRateWorst": "-0.0153"
-    },
-    "finalPortfolioBalance": "10156.1700",
-    "CAGR": 0.24892224713946032,
-    "standardDeviation": 0.030303142486978612,
-    "sharpeRatio": 0.46716646357345853
+  MDDMaxToMin: '-0.5293',
+  MDDInitialToMin: '-0.0056',
+  dateMax: '2020-08-28',
+  dateMin: '2017-01-20',
+  maxValue: '34841.2200',
+  minValue: '16400.8600',
+  initialValue: '16493.1500',
+  bestYear: {
+    changeBest: '8311.4400',
+    yearBest: '2019',
+    growthRateBest: '0.4028'
+  },
+  worstYear: {
+    changeWorst: '-1908.7500',
+    yearWorst: '2018',
+    growthRateWorst: '-0.0867'
+  },
+  finalPortfolioBalance: '15465.2900',
+  CAGR: 0.16938406656595228,
+  standardDeviation: 0.032812673349866026,
+  sharpeRatio: 0.2787391748259358
 }
+
+
 ```
 
 ## Diversification of a Portfolio among criterion
 
 Evaluates the portfolio diversification in:
-_ industries
-_ countries
-_ currencies
-_ asset classes
-_ sectors
+
+-   industries
+-   countries
+-   currencies
+-   asset classes
+-   sectors
 
 #### Inputs:
 
@@ -108,22 +241,24 @@ _ sectors
 ```javascript
 {
   industries: {
-    'Consumer Electronics': 0.09523809523809523,
-    'Internet Content & Information': 0.19047619047619047,
-    'Internet Retail': 0.19047619047619047,
-    'Information Technology Services': 0.14285714285714285,
-    'Banks-Diversified': 0.38095238095238093
+    'Consumer Electronics': 0.1626016260162602,
+    'Internet Content & Information': 0.032520325203252036,
+    'Internet Retail': 0.07317073170731708,
+    'Information Technology Services': 0.0813008130081301,
+    'Banks-Diversified': 0.6504065040650407
   },
-  countries: { USA: 0.9999999999999999 },
-  currencies: { USD: 0.9999999999999999 },
-  assetClasses: { 'Common Stock': 0.9999999999999999 },
+  countries: { USA: 1 },
+  currencies: { USD: 1 },
+  assetClasses: { 'Common Stock': 1 },
   sectors: {
-    Technology: 0.23809523809523808,
-    'Communication Services': 0.19047619047619047,
-    'Consumer Cyclical': 0.19047619047619047,
-    'Financial Services': 0.38095238095238093
+    Technology: 0.2439024390243903,
+    'Communication Services': 0.032520325203252036,
+    'Consumer Cyclical': 0.07317073170731708,
+    'Financial Services': 0.6504065040650407
   }
 }
+
+
 ```
 
 ## Price Earning Ratios
@@ -137,19 +272,18 @@ _ sectors
 
 #### Outputs:
 
-| Parameters            | Type   |
-| --------------------- | ------ |
+| Parameters            | Type   | Explanation                               |
+| --------------------- | ------ | ----------------------------------------- |
 | PERatios              | {      |
-| concrete stock symbol | number |
+| concrete stock symbol | number | Price-Earning ratio of each of the stocks |
 |                       | }      |
-| averagePERatios       | number | 
-Is this now calculated on the weighted PE Ratios of the individual stocks or just the average? Please add the Explanation column
+| averagePERatios       | number | Weighted average Price-Earning ratio      |
 
 #### Example output:
 
 ```javascript
 {
-  PERatios: {
+  peRation: {
     AAPL: '33.4662',
     GOOGL: '34.6457',
     AMZN: '74.3694',
@@ -157,8 +291,9 @@ Is this now calculated on the weighted PE Ratios of the individual stocks or jus
     BABA: '25.4694',
     JPM: '17.0011'
   },
-  averagePEration: 28.763647619047617
+  averagePEration: 21.98755609756098
 }
+
 ```
 
 ## Dividends
@@ -168,17 +303,16 @@ Is this now calculated on the weighted PE Ratios of the individual stocks or jus
 | Parameters            | Type                                                                      |
 | --------------------- | ------------------------------------------------------------------------- |
 | portfolio             | A real or simulated portfolio in the form it is fetched from FinApi       |
-| symbolCompanyOverview | Company Overviews in the form of {symbol: data fetched from AlphaVantage} I am not sure if this is sufficient specification here (and also above once) I think you should atleast make clear that it is from COMPANY_OVERVIEW endpoint|
+| symbolCompanyOverview | Company Overviews in the form of {symbol: data fetched from AlphaVantage} |
 
 #### Outputs:
 
-| Parameters            | Type   |
-| --------------------- | ------ |
+| Parameters            | Type   | Explanation                         |
+| --------------------- | ------ | ----------------------------------- |
 | dividendyield         | {      |
-| concrete stock symbol | number |
+| concrete stock symbol | number | Dividendyield of each of the stocks |
 |                       | }      |
-| averageDividendyield  | number |
-again here: is this now based on a weighted average? 
+| averageDividendyield  | number | Weighted average Dividendyield      |
 
 #### Example output:
 
@@ -192,7 +326,7 @@ again here: is this now based on a weighted average?
     BABA: 0,
     JPM: 0.0232
   },
-  averageDividendyield: 0.01669047619047619
+  averageDividendyield: 0.020284552845528457
 }
 
 ```
@@ -204,39 +338,40 @@ again here: is this now based on a weighted average?
 | Parameters | Type                                                                                     |
 | ---------- | ---------------------------------------------------------------------------------------- |
 | portfolio  | A real or simulated portfolio in the form it is fetched from FinApi                      |
-| stocksData | Daily/Weekly/Monthly Time Series in the from of {symbol: data fetched from AlphaVantage} Since you seem to give the option to insert different kinds of data (daile/weekly/monthly) please specify the differences or/and which one is prefered. (I guess the daily if available). Also does it have to be in the same format for all the stocks in the portfolio?) |
+| stocksData | Daily/Weekly/Monthly Time Series in the from of {symbol: data fetched from AlphaVantage} |
 
 #### Outputs:
 
-| Parameters            | Type   |
-| --------------------- | ------ |
-| totalGainLoss (this is a bit unspecific) make clear that positive numbers represent gains, negativ loss) please add explaination column        | number |
-| concrete stock symbol | {      |
-| symbolGainLoss   (same here)     | number |
-|                       | }      |
-Please also specify the timeframe of the gain or loss ( I supose it is from start to end date?)
+| Parameters            | Type   | Explanation                                                    |
+| --------------------- | ------ | -------------------------------------------------------------- |
+| totalGainLoss         | number | Positive numbers represent Gains and negative numbers - Losses |
+| concrete stock symbol | {      |                                                                |
+| symbolGainLoss        | number | Positive numbers represent Gains and negative numbers - Losses |
+|                       | }      |                                                                |
+
 #### Example output:
 
 ```javascript
 {
-  totalGainLoss: 1020.6800000000001,
-  AAPL: { symbolGainLoss: -22.599999999999994 },
+  totalGainLoss: 2726.7100000000028,
+  AAPL: { symbolGainLoss: -226 },
   GOOGL: { symbolGainLoss: 1172.5999999999995 },
   AMZN: { symbolGainLoss: -362.39999999999964 },
-  IBM: { symbolGainLoss: 29.940000000000055 },
-  BABA: { symbolGainLoss: -1.7399999999999523 },
-  JPM: { symbolGainLoss: 204.8800000000001 }
+  IBM: { symbolGainLoss: 99.80000000000018 },
+  BABA: { symbolGainLoss: -6.089999999999918 },
+  JPM: { symbolGainLoss: 2048.800000000003 }
 }
+
 ```
 
-## Volatility and Correlation:
+## Standard Deviation, Volatility and Correlation:
 
 #### Inputs:
 
 | Parameters | Type                                                                                     |
 | ---------- | ---------------------------------------------------------------------------------------- |
 | portfolio  | A real or simulated portfolio in the form it is fetched from FinApi                      |
-| stocksData | Daily/Weekly/Monthly Time Series in the from of {symbol: data fetched from AlphaVantage} (again as above) |
+| stocksData | Daily/Weekly/Monthly Time Series in the from of {symbol: data fetched from AlphaVantage} |
 
 #### Outputs:
 
@@ -248,7 +383,9 @@ Please also specify the timeframe of the gain or loss ( I supose it is from star
 | correlations          | {      |
 | concrete correlation  | number |
 |                       | }      |
-This should also include the figure of the total portfolio volatility (I think Vy already calculated this)
+| portfolioVolatility   | number |
+| standardDeviation     | number |
+
 #### Example output:
 
 ```javascript
@@ -277,8 +414,11 @@ This should also include the figure of the total portfolio volatility (I think V
     'Amazon to JPMorgan Chase & Co.': 0.223161337,
     'IBM to JPMorgan Chase & Co.': 0.609458275,
     'Alibaba group to JPMorgan Chase & Co.': 0.263935979
-  }
+  },
+  portfolioVolatility: 0.5208850412096532,
+  standardDeviation: 0.032812673349866026
 }
+
 
 ```
 
@@ -288,28 +428,35 @@ This should also include the figure of the total portfolio volatility (I think V
 
 | Parameters | Type                                                                                     |
 | ---------- | ---------------------------------------------------------------------------------------- |
-| portfolio  | A real or simulated portfolio in the form it is fetched from FinApi                           |
-| stocksData | Daily/Weekly/Monthly Time Series in the from of {symbol: data fetched from AlphaVantage} (same as above) |
+| portfolio  | A real or simulated portfolio in the form it is fetched from FinApi                      |
+| stocksData | Daily/Weekly/Monthly Time Series in the from of {symbol: data fetched from AlphaVantage} |
 
 #### Outputs:
 
 | Parameters            | Type   |
 | --------------------- | ------ |
-| {                     |        |
+| sharpeRatioPerSymbol  | {      |
 | concrete stock symbol | number |
-| }                     |        |
+|                       | }      |
+| portfolioSharpeRatio  | number |
+
 Again this should also be shown on a portfolio level
+
 #### Example output:
 
 ```javascript
 {
-  Apple: -0.01677788742875957,
-  Google: 0.3918344052565828,
-  Amazon: 0.5882535062884182,
-  IBM: -0.1304550726559575,
-  'Alibaba group': 0.30004682245527253,
-  'JPMorgan Chase & Co.': 0.18631715927443418
+  sharpeRatioPerSymbol: {
+    Apple: -0.01677788742875957,
+    Google: 0.3918344052565828,
+    Amazon: 0.5882535062884182,
+    IBM: -0.1304550726559575,
+    'Alibaba group': 0.30004682245527253,
+    'JPMorgan Chase & Co.': 0.18631715927443418
+  },
+  portfolioSharpeRatio: 0.2787391748259358
 }
+
 ```
 
 ## Debt/Equity:
@@ -318,18 +465,17 @@ Again this should also be shown on a portfolio level
 
 | Parameters            | Type                                                                   |
 | --------------------- | ---------------------------------------------------------------------- |
-| portfolio             | A real or simulated portfolio in the form it is fetched from FinApi          |
+| portfolio             | A real or simulated portfolio in the form it is fetched from FinApi    |
 | balanceSheetPerSymbol | Balance Sheets in the form of {symbol: data fetched from AlphaVantage} |
 
 #### Outputs:
 
-| Parameters            | Type   |
-| --------------------- | ------ |
-| debtEquityPerStock    | {      |
-| concrete stock symbol | number |
-|                       | }      |
-| totalDebtEquity (remove this one, that makes no sense from a financial perspective ;) but also from logical perspective as these are ratios and adding rations is rarely usefull)       | number |
-| averageDebtEquity (again weighted right?)    | number |
+| Parameters            | Type   | Explanation                                      |
+| --------------------- | ------ | ------------------------------------------------ |
+| debtEquityPerStock    | {      |                                                  |
+| concrete stock symbol | number | Represents the Debt/Equity of each of the stocks |
+|                       | }      |                                                  |
+| averageDebtEquity     | number | Weighted average Debt/Equity of the portfolio    |
 
 #### Example output:
 
@@ -343,8 +489,7 @@ Again this should also be shown on a portfolio level
     BABA: 0.5082281505442549,
     JPM: 11.121075767663967
   },
-  totalDebtEquity: 24.986322790938445,
-  averageDebtEquity: 4.164387131823074
+  averageDebtEquity: 8.48989362900556
 }
 
 ```

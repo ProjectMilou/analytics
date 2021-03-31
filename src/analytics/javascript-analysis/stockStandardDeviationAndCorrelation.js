@@ -1,19 +1,7 @@
 const stats = require("stats-lite");
 const calculateCorrelation = require("calculate-correlation");
 const backtesting = require('../backtesting/backtesting.js');
-
-const namesToSymbols = {
-    Tesla: "TSLA",
-    Bayer: "BAYRY",
-    "BASF SE NA O.N.": "BAS",
-    Apple: "AAPL",
-    Amazon: "AMZN",
-    Google: "GOOGL",
-    IBM: "IBM",
-    "Alibaba group": "BABA",
-    "JPMorgan Chase & Co.": "JPM"
-};
-
+const { namesToSymbols } = require("../../static/names-symbols-mapping")
 //needs daily data
 function standardDeviationAndCorrelation(portfolio, stocksData) {
     //may need to find starting date and combine all dates
@@ -65,9 +53,13 @@ function standardDeviationAndCorrelation(portfolio, stocksData) {
         volatility[stock.name] = stats.stdev(valuesOfStock[stock.name]) * Math.sqrt(252);
     });
 
+    const standardDeviation = backtesting.standardDeviation(portfolio, stocksData);
+    const portfolioVolatility = standardDeviation * Math.sqrt(252);
     return AnnualizedVolatilityAndCorrelation = {
         volatility,
-        correlations
+        correlations,
+        portfolioVolatility,
+        standardDeviation
     }
 }
 
@@ -87,7 +79,7 @@ function sharpeRatioStocks(portfolio, stocksData) {
         sharpeRatio[stock.name] = (returnOfStocks[stock.name] - riskFreeRate) / volatility[stock.name];
 
     });
-    return sharpeRatio;
+    return { sharpeRatioPerSymbol: sharpeRatio, portfolioSharpeRatio: backtesting.sharpeRatio(portfolio, stocksData) };
 }
 
 function returnAnnual(portfolio, stocksData) {

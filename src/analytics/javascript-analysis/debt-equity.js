@@ -1,4 +1,4 @@
-
+const { namesToSymbols } = require("../../static/names-symbols-mapping")
 /**
  *  Debt/Equity = Total Liabilities / Total Shareholders Equity
  *  `WHERE`
@@ -10,25 +10,35 @@
  * the average debt/equity of the portfolio
  */
 function debtEquity(portfolio, balanceSheetPerSymbol) {
+    let symbolsToQuantity = {};
 
-    /*
-        
-    */
+    let totalQuantity = 0;
+    portfolio.securities.forEach((element) => {
+        symbolsToQuantity[namesToSymbols[element.name]] =
+            element.quantityNominal;
+        totalQuantity += element.quantityNominal;
+    });
+
+    let lambda = 1 / totalQuantity;
+    Object.keys(symbolsToQuantity).forEach((symbol) => {
+        symbolsToQuantity[symbol] *= lambda
+    });
+
     let results = {}
-    let totalDebtEquity = 0;
+
+    let weightedAverageDebtEquity = 0;
 
     Object.keys(balanceSheetPerSymbol).forEach(symbol => {
         let totalAssets = balanceSheetPerSymbol[symbol].annualReports[0].totalAssets;
         let totalLiabilities = balanceSheetPerSymbol[symbol].annualReports[0].totalLiabilities;
         let currEquityDebt = totalLiabilities / (totalAssets - totalLiabilities);
         results[symbol] = currEquityDebt
-        totalDebtEquity += currEquityDebt
+        weightedAverageDebtEquity += currEquityDebt * symbolsToQuantity[symbol]
     });
 
     return {
         debtEquityPerStock: results,
-        totalDebtEquity,
-        averageDebtEquity: totalDebtEquity / Object.keys(balanceSheetPerSymbol).length
+        averageDebtEquity: weightedAverageDebtEquity
     };
 }
 
