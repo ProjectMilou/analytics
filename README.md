@@ -8,7 +8,7 @@ Testing the performance of a portfolio over a historical time span
 
 | Parameters | Type                                                                                     |
 | ---------- | ---------------------------------------------------------------------------------------- |
-| portfolio  | The exact same portfolio, which can be fetched from the finApi                           |
+| portfolio  | A real or simulated portfolio in the form it is fetched from FinApi                      |
 | stocksData | Daily/Weekly/Monthly Time Series in the from of {symbol: data fetched from AlphaVantage} |
 | fromDate   | Date                                                                                     |
 | toDate     | Date                                                                                     |
@@ -34,10 +34,10 @@ Testing the performance of a portfolio over a historical time span
 | yearWorst             | Date as String,                   | The year itself                                                                                     |
 | growthRateWorst       | number as String                  | The growth rate of the portfolio value in this year                                                 |
 |                       | }                                 |                                                                                                     |
-| finalPortfolioBalance | number as String,                 | The final portfolio balance (if < 0 => equal ot 0)                                                  |
-| CAGR                  | number                            | Compund Annual Growth Rate of the portfolio                                                         |
-| standardDeviation     | number                            | Standard Deviation                                                                                  |
-| sharpeRatio           | number                            | Sharpe Ratio                                                                                        |
+| finalPortfolioBalance | number as String,                 | The final portfolio balance (if < 0 => equal to 0)                                                  |
+| CAGR                  | number                            | Compound Annual Growth Rate of the portfolio                                                        |
+| standardDeviation     | number                            | Standard Deviation of the portfolio                                                                 |
+| sharpeRatio           | number                            | Sharpe Ratio of the portfolio                                                                       |
 
 #### Example output:
 
@@ -73,13 +73,14 @@ Evaluates the portfolio diversification in:
 _ industries
 _ countries
 _ currencies
-_ asset classes \* sectors
+_ asset classes
+_ sectors
 
 #### Inputs:
 
 | Parameters            | Type                                                                      |
 | --------------------- | ------------------------------------------------------------------------- |
-| portfolio             | The exact same portfolio, which can be fetched from the finApi            |
+| portfolio             | A real or simulated portfolio in the form it is fetched from FinApi       |
 | symbolCompanyOverview | Company Overviews in the form of {symbol: data fetched from AlphaVantage} |
 
 #### Outputs:
@@ -131,7 +132,7 @@ _ asset classes \* sectors
 
 | Parameters            | Type                                                                      |
 | --------------------- | ------------------------------------------------------------------------- |
-| portfolio             | The exact same portfolio, which can be fetched from the finApi            |
+| portfolio             | A real or simulated portfolio in the form it is fetched from FinApi       |
 | symbolCompanyOverview | Company Overviews in the form of {symbol: data fetched from AlphaVantage} |
 
 #### Outputs:
@@ -141,7 +142,8 @@ _ asset classes \* sectors
 | PERatios              | {      |
 | concrete stock symbol | number |
 |                       | }      |
-| averagePERatios       | number |
+| averagePERatios       | number | 
+Is this now calculated on the weighted PE Ratios of the individual stocks or just the average? Please add the Explanation column
 
 #### Example output:
 
@@ -165,8 +167,8 @@ _ asset classes \* sectors
 
 | Parameters            | Type                                                                      |
 | --------------------- | ------------------------------------------------------------------------- |
-| portfolio             | The exact same portfolio, which can be fetched from the finApi            |
-| symbolCompanyOverview | Company Overviews in the form of {symbol: data fetched from AlphaVantage} |
+| portfolio             | A real or simulated portfolio in the form it is fetched from FinApi       |
+| symbolCompanyOverview | Company Overviews in the form of {symbol: data fetched from AlphaVantage} I am not sure if this is sufficient specification here (and also above once) I think you should atleast make clear that it is from COMPANY_OVERVIEW endpoint|
 
 #### Outputs:
 
@@ -176,6 +178,7 @@ _ asset classes \* sectors
 | concrete stock symbol | number |
 |                       | }      |
 | averageDividendyield  | number |
+again here: is this now based on a weighted average? 
 
 #### Example output:
 
@@ -200,18 +203,18 @@ _ asset classes \* sectors
 
 | Parameters | Type                                                                                     |
 | ---------- | ---------------------------------------------------------------------------------------- |
-| portfolio  | The exact same portfolio, which can be fetched from the finApi                           |
-| stocksData | Daily/Weekly/Monthly Time Series in the from of {symbol: data fetched from AlphaVantage} |
+| portfolio  | A real or simulated portfolio in the form it is fetched from FinApi                      |
+| stocksData | Daily/Weekly/Monthly Time Series in the from of {symbol: data fetched from AlphaVantage} Since you seem to give the option to insert different kinds of data (daile/weekly/monthly) please specify the differences or/and which one is prefered. (I guess the daily if available). Also does it have to be in the same format for all the stocks in the portfolio?) |
 
 #### Outputs:
 
 | Parameters            | Type   |
 | --------------------- | ------ |
-| totalGainLoss         | number |
+| totalGainLoss (this is a bit unspecific) make clear that positive numbers represent gains, negativ loss) please add explaination column        | number |
 | concrete stock symbol | {      |
-| symbolGainLoss        | number |
+| symbolGainLoss   (same here)     | number |
 |                       | }      |
-
+Please also specify the timeframe of the gain or loss ( I supose it is from start to end date?)
 #### Example output:
 
 ```javascript
@@ -232,8 +235,8 @@ _ asset classes \* sectors
 
 | Parameters | Type                                                                                     |
 | ---------- | ---------------------------------------------------------------------------------------- |
-| portfolio  | The exact same portfolio, which can be fetched from the finApi                           |
-| stocksData | Daily/Weekly/Monthly Time Series in the from of {symbol: data fetched from AlphaVantage} |
+| portfolio  | A real or simulated portfolio in the form it is fetched from FinApi                      |
+| stocksData | Daily/Weekly/Monthly Time Series in the from of {symbol: data fetched from AlphaVantage} (again as above) |
 
 #### Outputs:
 
@@ -245,7 +248,7 @@ _ asset classes \* sectors
 | correlations          | {      |
 | concrete correlation  | number |
 |                       | }      |
-
+This should also include the figure of the total portfolio volatility (I think Vy already calculated this)
 #### Example output:
 
 ```javascript
@@ -285,8 +288,8 @@ _ asset classes \* sectors
 
 | Parameters | Type                                                                                     |
 | ---------- | ---------------------------------------------------------------------------------------- |
-| portfolio  | The exact same portfolio, which can be fetched from the finApi                           |
-| stocksData | Daily/Weekly/Monthly Time Series in the from of {symbol: data fetched from AlphaVantage} |
+| portfolio  | A real or simulated portfolio in the form it is fetched from FinApi                           |
+| stocksData | Daily/Weekly/Monthly Time Series in the from of {symbol: data fetched from AlphaVantage} (same as above) |
 
 #### Outputs:
 
@@ -295,7 +298,7 @@ _ asset classes \* sectors
 | {                     |        |
 | concrete stock symbol | number |
 | }                     |        |
-
+Again this should also be shown on a portfolio level
 #### Example output:
 
 ```javascript
@@ -315,7 +318,7 @@ _ asset classes \* sectors
 
 | Parameters            | Type                                                                   |
 | --------------------- | ---------------------------------------------------------------------- |
-| portfolio             | The exact same portfolio, which can be fetched from the finApi         |
+| portfolio             | A real or simulated portfolio in the form it is fetched from FinApi          |
 | balanceSheetPerSymbol | Balance Sheets in the form of {symbol: data fetched from AlphaVantage} |
 
 #### Outputs:
@@ -325,8 +328,8 @@ _ asset classes \* sectors
 | debtEquityPerStock    | {      |
 | concrete stock symbol | number |
 |                       | }      |
-| totalDebtEquity       | number |
-| averageDebtEquity     | number |
+| totalDebtEquity (remove this one, that makes no sense from a financial perspective ;) but also from logical perspective as these are ratios and adding rations is rarely usefull)       | number |
+| averageDebtEquity (again weighted right?)    | number |
 
 #### Example output:
 
