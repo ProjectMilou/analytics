@@ -168,7 +168,7 @@ Testing the performance of a portfolio over a historical time span
 | CAGR                  | number                            | Compound Annual Growth Rate of the portfolio                                                        |
 | standardDeviation     | number                            | Standard Deviation of the portfolio                                                                 |
 | sharpeRatio           | number                            | Sharpe Ratio of the portfolio                                                                       |
-
+Can you here also output the portfolio value over time, as you have already sent me? 
 #### Example output:
 
 ```javascript
@@ -195,7 +195,7 @@ Testing the performance of a portfolio over a historical time span
   standardDeviation: 0.032812673349866026,
   sharpeRatio: 0.2787391748259358
 }
-
+Something seems to be off here. The Portfolio makes on average 16% a year, however the final portfolio balance is less than the initial balance???
 
 ```
 
@@ -257,6 +257,7 @@ Evaluates the portfolio diversification in:
     'Financial Services': 0.6504065040650407
   }
 }
+Can you sort the diversification measures please from high to low. As the frontend will probably pick the top 1-3 and this is easier if it are the first ones. 
 
 
 ```
@@ -348,7 +349,7 @@ Evaluates the portfolio diversification in:
 | concrete stock symbol | {      |                                                                |
 | symbolGainLoss        | number | Positive numbers represent Gains and negative numbers - Losses |
 |                       | }      |                                                                |
-
+I suppose the timeframe is from beginning to end date of backtesting? Write that down please. 
 #### Example output:
 
 ```javascript
@@ -363,7 +364,7 @@ Evaluates the portfolio diversification in:
 }
 
 ```
-
+If the timeframe is from beginning to end, these numbers seem to be wrong. Amazon has grown in price by more than 300 % from 2017 to today. 
 ## Standard Deviation, Volatility and Correlation:
 
 #### Inputs:
