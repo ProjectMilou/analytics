@@ -72,13 +72,21 @@ function getDiversification(portfolio, symbolCompanyOverview) {
         }
     });
 
+
     return {
-        industries,
-        countries,
-        currencies,
-        assetClasses,
-        sectors
+        industries: sortObject(industries),
+        countries: sortObject(countries),
+        currencies: sortObject(currencies),
+        assetClasses: sortObject(assetClasses),
+        sectors: sortObject(sectors)
     };
+}
+
+function sortObject(obj) {
+    return Object.entries(obj)
+        .sort(([, a], [, b]) => a - b)
+        .reverse()
+        .reduce((r, [k, v]) => ({ ...r, [k]: v }), {});
 }
 
 exports.getDiversification = getDiversification;

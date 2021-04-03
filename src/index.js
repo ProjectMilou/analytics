@@ -44,7 +44,11 @@ console.log("\n**************************\n      BACKTESTING\n")
 console.log(`From: ${fromDate.toLocaleDateString()} To: ${toDate.toLocaleDateString()} \n`)
 
 const backtestResult = analytics.backtest(portfolioDivers, stocksData)
-console.log(backtestResult);
+console.log({
+    fromDate,
+    toDate,
+    ...backtestResult
+});
 
 console.log("\n**************************\n      DIVERSIFICATION\n")
 

@@ -38,13 +38,15 @@ function finalPortfolioBalance(portfolio, stocksData) {
         totalEndYear +=
             stocksData[symbol][dateForEndSymbol]["4. close"] *
             symbolToQuantity[symbol];
+        console.log(`${dateForStartSymbol} AND ${dateForEndSymbol} : ${symbol}`)
     });
     totalBalance = totalEndYear - totalStartYear;
     if (totalBalance < 0) {
         return { totalBalance: 0 };
     }
     return {
-        finalPortfolioBalance: totalBalance.toFixed(4)
+        // used to be totalBalance :)
+        finalPortfolioBalance: totalEndYear
     };
 }
 

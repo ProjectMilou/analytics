@@ -173,6 +173,8 @@ Testing the performance of a portfolio over a historical time span
 
 ```javascript
 {
+  fromDate: 2017-01-01T00:00:00.000Z,
+  toDate: 2021-04-03T08:57:28.391Z,
   MDDMaxToMin: '-0.5293',
   MDDInitialToMin: '-0.0056',
   dateMax: '2020-08-28',
@@ -190,12 +192,11 @@ Testing the performance of a portfolio over a historical time span
     yearWorst: '2018',
     growthRateWorst: '-0.0867'
   },
-  finalPortfolioBalance: '15465.2900',
+  finalPortfolioBalance: 31958.44,
   CAGR: 0.16938406656595228,
   standardDeviation: 0.032812673349866026,
   sharpeRatio: 0.2787391748259358
 }
-
 
 ```
 
@@ -239,24 +240,26 @@ Evaluates the portfolio diversification in:
 #### Example output:
 
 ```javascript
+
 {
   industries: {
+    'Banks-Diversified': 0.6504065040650407,
     'Consumer Electronics': 0.1626016260162602,
-    'Internet Content & Information': 0.032520325203252036,
-    'Internet Retail': 0.07317073170731708,
     'Information Technology Services': 0.0813008130081301,
-    'Banks-Diversified': 0.6504065040650407
+    'Internet Retail': 0.07317073170731708,
+    'Internet Content & Information': 0.032520325203252036
   },
   countries: { USA: 1 },
   currencies: { USD: 1 },
   assetClasses: { 'Common Stock': 1 },
   sectors: {
+    'Financial Services': 0.6504065040650407,
     Technology: 0.2439024390243903,
-    'Communication Services': 0.032520325203252036,
     'Consumer Cyclical': 0.07317073170731708,
-    'Financial Services': 0.6504065040650407
+    'Communication Services': 0.032520325203252036
   }
 }
+
 
 
 ```
