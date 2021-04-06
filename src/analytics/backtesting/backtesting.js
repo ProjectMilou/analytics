@@ -230,13 +230,14 @@ function bestAndWorstYear(portfolio, stocksData) {
         }
     };
 }
-
+//standard deviation from average daily returns
+//made for daily data
 function standardDeviation(portfolio, stocksData) {
     const usedDates = Object.keys(
         stocksData[namesToSymbols[portfolio.securities[0].name]]
     );
     const numDays = usedDates.length;
-
+    //return on each day
     let valueEachDay = [];
     let lastValues = {};
 
@@ -244,6 +245,7 @@ function standardDeviation(portfolio, stocksData) {
         lastValues[stock.name] = 0;
     });
 
+    //saves the sum on each day
     let sums = {};
     for (i = numDays - 1; i >= 0; i--) {
         let sum = 0;
@@ -261,7 +263,7 @@ function standardDeviation(portfolio, stocksData) {
             valueEachDay.push(sums[i + 1] / sum - 1);
         }
     }
-    const standardDeviation = stats.stdev(valueEachDay);
+    const standardDeviation = stats.stdev(valueEachDay) * Math.sqrt(252);
 
     return standardDeviation;
 }
@@ -294,7 +296,7 @@ function sharpeRatio(portfolio, stocksData) {
         (returnRate - accumulatedRiskFreeRate) /
         standardDeviation(portfolio, stocksData));
 }
-
+//growth per year
 function compoundAnnualGrowthRate(portfolio, stocksData) {
     //checks if the date is available in all stocks
     const usedDates = getDaysAvailableInAll(portfolio, stocksData);
