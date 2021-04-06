@@ -2,16 +2,16 @@
     "Meta Data": {
         "1. Information": "Weekly Prices (open, high, low, close) and Volumes",
         "2. Symbol": "BAYRY",
-        "3. Last Refreshed": "2021-03-22",
+        "3. Last Refreshed": "2021-03-26",
         "4. Time Zone": "US/Eastern"
     },
     "Weekly Time Series": {
-        "2021-03-22": {
+        "2021-03-26": {
             "1. open": "15.9640",
-            "2. high": "16.0200",
-            "3. low": "15.8600",
-            "4. close": "15.9200",
-            "5. volume": "244041"
+            "2. high": "16.1200",
+            "3. low": "15.6500",
+            "4. close": "15.7780",
+            "5. volume": "1366372"
         },
         "2021-03-19": {
             "1. open": "15.9100",

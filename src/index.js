@@ -2,28 +2,21 @@ const fs = require("fs");
 const api = require("./api/alphaVantage");
 const analytics = require("./analytics/analytics");
 const diversification = require("./analytics/javascript-analysis/diversification");
-
+const priceEarningRatio = require("./analytics/javascript-analysis/PriceEarningRatio");
+const dividendYield = require("./analytics/javascript-analysis/Dividendyield");
+const stockStandardDeviationAndCorrelation = require("./analytics/javascript-analysis/stockStandardDeviationAndCorrelation");
+const gainLoss = require("./analytics/javascript-analysis/gainLoss")
+const debtEquity = require("./analytics/javascript-analysis/debt-equity")
+const { namesToSymbols } = require("./static/names-symbols-mapping")
 
 // Can be compared like fromDate < toDate or fromDate > toDate
 // Equality can be compared like fromDate.getTime() === toDate.getTime()
-const fromDate = new Date("2015-01-01");
-const toDate = new Date("2018-12-31");
+const fromDate = new Date("2017-01-01");
+const toDate = new Date();
 
 
 // Used Google and Symbol Search from AlphaVantageAPI
 // Used for mapping Names to Symbols in extractSymbolsFromPortfolio()
-const namesToSymbols = {
-    Tesla: "TSLA",
-    Bayer: "BAYRY",
-    "BASF SE NA O.N.": "BAS",
-    Apple: "AAPL",
-    Amazon: "AMZN",
-    Google: "GOOGL",
-    IBM: "IBM",
-    "Alibaba group": "BABA",
-    "JPMorgan Chase & Co.": "JPM"
-};
-
 
 let portfolio = readPortfolio("Demo_Portfolio_1.json")
 let portfolioDivers = readPortfolio("Demo_Portfolio_2.json")
@@ -42,18 +35,62 @@ const symbolsDivers = extractSymbolsFromPortfolio(portfolioDivers);
 
 //fetchStocksForSymbols(symbolsDivers);
 
-let stocksData = readSymbolDataAndFilterByDates(symbols);
+let stocksData = readSymbolDataAndFilterByDates(symbolsDivers);
 let symbolCompanyOverview = readCompanyOverviewsBySymbols(symbolsDivers);
+const balanceSheetPerSymbol = readBalanceSheetsBySymbols(symbolsDivers);
 
-const backtestResult = analytics.backtest(portfolio, stocksData)
-console.log(backtestResult);
+console.log("\n**************************\n      BACKTESTING\n")
+
+console.log(`From: ${fromDate.toLocaleDateString()} To: ${toDate.toLocaleDateString()} \n`)
+
+const backtestResult = analytics.backtest(portfolioDivers, stocksData)
+console.log({
+    fromDate,
+    toDate,
+    ...backtestResult
+});
+
+console.log("\n**************************\n      DIVERSIFICATION\n")
 
 const resultFromDiversification = diversification.getDiversification(portfolioDivers, symbolCompanyOverview);
 console.log(resultFromDiversification)
 
 
+console.log("\n**************************\n      PERatios\n")
+
+const resultFromPriceEarningRatio = priceEarningRatio.getPriceEarningRatio(portfolioDivers, symbolCompanyOverview);
+console.log(resultFromPriceEarningRatio);
 
 
+console.log("\n**************************\n      DIVIDENDYIELDS\n")
+
+const resultFromDividendyield = dividendYield.getDividendyield(portfolioDivers, symbolCompanyOverview);
+console.log(resultFromDividendyield);
+
+
+console.log("\n**************************\n      GAIN/LOSS\n")
+
+
+const gainOrLoss = gainLoss.gainOrLossLastYearOrMonth(portfolioDivers, stocksData)
+console.log(gainOrLoss)
+
+
+console.log("\n**************************\n VOLATILITY, STANDARD DEVIATION\n    CORRELATION\n")
+
+const annualizedVolatilityAndCorrelation = stockStandardDeviationAndCorrelation.standardDeviationAndCorrelation(portfolioDivers, stocksData);
+console.log(annualizedVolatilityAndCorrelation)
+
+
+console.log("\n**************************\n      SHARPE RATIO \n")
+
+const sharpeRatio = stockStandardDeviationAndCorrelation.sharpeRatioStocks(portfolioDivers, stocksData);
+console.log(sharpeRatio);
+
+
+console.log("\n**************************\n      DEBT/EQUITY\n")
+
+const debtEquityResults = debtEquity.debtEquity(portfolioDivers, balanceSheetPerSymbol);
+console.log(debtEquityResults);
 
 // HELPER FUNCTIONS :)
 
@@ -172,3 +209,19 @@ function readCompanyOverviewsBySymbols(symbols) {
     }
     return symbolCompanyOverviews;
 }
+
+function readBalanceSheetsBySymbols(symbols) {
+    let balanceSheetPerSymbol = {}
+    try {
+        symbols.forEach(symbol => {
+            const jsonString = fs.readFileSync(
+                `./data/balanceSheet/${symbol}.json`
+            );
+            const balanceSheet = JSON.parse(jsonString);
+            balanceSheetPerSymbol[symbol] = balanceSheet;
+        })
+    } catch (err) {
+        console.log(err)
+    }
+    return balanceSheetPerSymbol;
+};

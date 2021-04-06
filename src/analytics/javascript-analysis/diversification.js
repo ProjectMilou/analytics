@@ -1,14 +1,4 @@
-const namesToSymbols = {
-    Tesla: "TSLA",
-    Bayer: "BAYRY",
-    "BASF SE NA O.N.": "BAS",
-    Apple: "AAPL",
-    Amazon: "AMZN",
-    Google: "GOOGL",
-    IBM: "IBM",
-    "Alibaba group": "BABA",
-    "JPMorgan Chase & Co.": "JPM"
-};
+const { namesToSymbols } = require("../../static/names-symbols-mapping")
 
 /**
  * Returns the distribution of a portfolio over different 
@@ -37,8 +27,6 @@ function getDiversification(portfolio, symbolCompanyOverview) {
     Object.keys(symbolsToQuantity).forEach((symbol) => {
         symbolsToQuantity[symbol] *= lambda
     });
-
-    console.log(symbolsToQuantity)
 
     let industries = {};
     let countries = {};
@@ -84,13 +72,21 @@ function getDiversification(portfolio, symbolCompanyOverview) {
         }
     });
 
+
     return {
-        industries,
-        countries,
-        currencies,
-        assetClasses,
-        sectors
+        industries: sortObject(industries),
+        countries: sortObject(countries),
+        currencies: sortObject(currencies),
+        assetClasses: sortObject(assetClasses),
+        sectors: sortObject(sectors)
     };
+}
+
+function sortObject(obj) {
+    return Object.entries(obj)
+        .sort(([, a], [, b]) => a - b)
+        .reverse()
+        .reduce((r, [k, v]) => ({ ...r, [k]: v }), {});
 }
 
 exports.getDiversification = getDiversification;
