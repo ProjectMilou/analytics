@@ -357,12 +357,14 @@ Evaluates the portfolio diversification in:
 ```javascript
 {
   totalGainLoss: 2726.7100000000028,
-  AAPL: { symbolGainLoss: -226 },
-  GOOGL: { symbolGainLoss: 1172.5999999999995 },
-  AMZN: { symbolGainLoss: -362.39999999999964 },
-  IBM: { symbolGainLoss: 99.80000000000018 },
-  BABA: { symbolGainLoss: -6.089999999999918 },
-  JPM: { symbolGainLoss: 2048.800000000003 }
+  perSymbol: {
+    AAPL: -226,
+    GOOGL: 1172.5999999999995,
+    AMZN: -362.39999999999964,
+    IBM: 99.80000000000018,
+    BABA: -6.089999999999918,
+    JPM: 2048.800000000003
+  }
 }
 
 ```
