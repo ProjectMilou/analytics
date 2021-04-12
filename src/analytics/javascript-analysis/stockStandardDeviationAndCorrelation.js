@@ -103,8 +103,11 @@ function returnAnnual(portfolio, stocksData) {
 }
 
 function getCorrelationKey(stock1, stock2) {
-    if (stock1.isin < stock2.isin) return stock1.isin + ";" + stock2.isin;
-    else return stock2.isin + ";" + stock1.isin;
+    const stockSymbol1 = namesToSymbols[stock1.name];
+    const stockSymbol2 = namesToSymbols[stock2.name];
+
+    if (stockSymbol1 < stockSymbol2) return stockSymbol1 + ";" + stockSymbol2;
+    else return stockSymbol2 + ";" + stockSymbol1;
 }
 
 exports.standardDeviationAndCorrelation = standardDeviationAndCorrelation;
