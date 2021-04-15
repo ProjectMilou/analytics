@@ -8,6 +8,7 @@ const stockStandardDeviationAndCorrelation = require("./analytics/javascript-ana
 const gainLoss = require("./analytics/javascript-analysis/gainLoss")
 const debtEquity = require("./analytics/javascript-analysis/debt-equity")
 const { namesToSymbols } = require("./static/names-symbols-mapping")
+const treynorRatio = require("./analytics/javascript-analysis/treynorRatio");
 
 // Can be compared like fromDate < toDate or fromDate > toDate
 // Equality can be compared like fromDate.getTime() === toDate.getTime()
@@ -91,6 +92,20 @@ console.log("\n**************************\n      DEBT/EQUITY\n")
 
 const debtEquityResults = debtEquity.debtEquity(portfolioDivers, balanceSheetPerSymbol);
 console.log(debtEquityResults);
+
+
+console.log("\n**************************\n      TREYNOR RATIO \n")
+
+const symbolToBeta = {
+    "AAPL": "1.2514",
+    "AMZN": "1.1327",
+    "BABA": "0.8835",
+    "GOOGL": "0.9995",
+    "IBM": "1.2454",
+    "JPM": "1.2015"
+};
+const treynor = treynorRatio.treynorRatio(portfolioDivers, stocksData, symbolToBeta);
+console.log(treynor);
 
 // HELPER FUNCTIONS :)
 
