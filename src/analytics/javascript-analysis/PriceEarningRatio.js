@@ -1,14 +1,14 @@
 const { namesToSymbols } = require("../../static/names-symbols-mapping")
-/**
- * Returns the price-earning and average  ratio from the company overview
- * regarding the quantity of stocks bought
- * @param {object} portfolio Portfolio from finAPI 
- * @param {{symbol1: {}, symbolN: {}}} symbolCompanyOverview 
- * @returns  {{
- * peRatio: {peRatio: number},
- * averagePEration: {averagePEration: totalPEratio}
- * }}
- */
+    /**
+     * Returns the price-earning and average  ratio from the company overview
+     * regarding the quantity of stocks bought
+     * @param {object} portfolio Portfolio from finAPI 
+     * @param {{symbol1: {}, symbolN: {}}} symbolCompanyOverview 
+     * @returns  {{
+     * peRatio: {peRatio: number},
+     * averagePEration: {averagePEration: totalPEratio}
+     * }}
+     */
 function getPriceEarningRatio(portfolio, symbolCompanyOverview) {
     let peRation = {};
     let totalPEratio = 0;

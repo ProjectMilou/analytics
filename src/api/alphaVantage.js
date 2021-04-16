@@ -23,7 +23,7 @@ if (!apikey) {
  * @param   {string} interval [allowed values: "1min" | "5min" | "15min" | "30min" | "60min"]
  * @returns {object}            JavaScript Object
  */
-const getTimeSeriesIntraday = async (symbol, interval) => {
+const getTimeSeriesIntraday = async(symbol, interval) => {
     const TIME_SERIES_INTRADAY_QUERY = querystring.stringify({
         apikey: apikey,
         symbol: symbol,
@@ -47,7 +47,7 @@ const getTimeSeriesIntraday = async (symbol, interval) => {
  * @param   {string} symbol represents stock name (e.g: "IBM")
  * @returns {object}        JavaScript Object
  */
-const getTimeSeriesDaily = async (symbol) => {
+const getTimeSeriesDaily = async(symbol) => {
     const TIME_SERIES_DAILY_QUERY = querystring.stringify({
         apikey: apikey,
         symbol: symbol,
@@ -71,7 +71,7 @@ const getTimeSeriesDaily = async (symbol) => {
  * @param   {string} symbol represents stock name (e.g: "IBM")
  * @returns {object}        JavaScript Object
  */
-const getTimeSeriesWeekly = async (symbol) => {
+const getTimeSeriesWeekly = async(symbol) => {
     const TIME_SERIES_WEEKLY_QUERY = querystring.stringify({
         apikey: apikey,
         symbol: symbol,
@@ -94,7 +94,7 @@ const getTimeSeriesWeekly = async (symbol) => {
  * @param   {string} symbol represents stock name (e.g: "IBM")
  * @returns {object}        JavaScript Object
  */
-const getTimeSeriesMonthly = async (symbol) => {
+const getTimeSeriesMonthly = async(symbol) => {
     const TIME_SERIES_MONTHLY_QUERY = querystring.stringify({
         apikey: apikey,
         symbol: symbol,
@@ -122,7 +122,7 @@ const getTimeSeriesMonthly = async (symbol) => {
  * Can be used for the performance measurements of a Portfolio -
  * the response includes PERatio(Price-Earning Ratio) and DividendYield
  */
-const getCompanyOverview = async (symbol) => {
+const getCompanyOverview = async(symbol) => {
     const COMPANY_OVERVIEW_QUERY = querystring.stringify({
         apikey: apikey,
         symbol: symbol,
@@ -149,7 +149,7 @@ const getCompanyOverview = async (symbol) => {
  * which best match the search keyword. (e.g for keyword="Tesla"
  * we receive a match score of 1.000 for symbol="TLO.DEX")
  */
-const getSymbolForKeyword = async (keyword) => {
+const getSymbolForKeyword = async(keyword) => {
     const SYMBOL_SEARCH_QUERY = querystring.stringify({
         apikey: apikey,
         keywords: keyword,
@@ -174,7 +174,7 @@ const getSymbolForKeyword = async (keyword) => {
  * for the company of interest. Data is generally refreshed on the same day
  * a company reports its latest earnings and financials.
  */
-const getBalanceSheetForSymbol = async (symbol) => {
+const getBalanceSheetForSymbol = async(symbol) => {
     const BALANCE_SHEET_QUERY = querystring.stringify({
         apikey: apikey,
         symbol: symbol,

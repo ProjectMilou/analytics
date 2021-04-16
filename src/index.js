@@ -8,6 +8,7 @@ const stockStandardDeviationAndCorrelation = require("./analytics/javascript-ana
 const gainLoss = require("./analytics/javascript-analysis/gainLoss")
 const debtEquity = require("./analytics/javascript-analysis/debt-equity")
 const { namesToSymbols } = require("./static/names-symbols-mapping")
+const portfolioOptimization = require("./analytics/javascript-analysis/PortfolioOptimization");
 
 // Can be compared like fromDate < toDate or fromDate > toDate
 // Equality can be compared like fromDate.getTime() === toDate.getTime()
@@ -92,6 +93,10 @@ console.log("\n**************************\n      DEBT/EQUITY\n")
 const debtEquityResults = debtEquity.debtEquity(portfolioDivers, balanceSheetPerSymbol);
 console.log(debtEquityResults);
 
+
+console.log("\n**************************\n      PORTFOLIO OPTIMIZATION\n");
+const portfolioOptimizationResult = portfolioOptimization.getPortfolioOptimization(portfolioDivers, stocksData);
+console.log(portfolioOptimizationResult);
 // HELPER FUNCTIONS :)
 
 function fetchStocksForSymbols(symbols) {

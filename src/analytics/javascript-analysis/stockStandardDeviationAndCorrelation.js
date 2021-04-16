@@ -2,7 +2,7 @@ const stats = require("stats-lite");
 const calculateCorrelation = require("calculate-correlation");
 const backtesting = require('../backtesting/backtesting.js');
 const { namesToSymbols } = require("../../static/names-symbols-mapping")
-//needs daily data
+    //needs daily data
 function standardDeviationAndCorrelation(portfolio, stocksData) {
     //may need to find starting date and combine all dates
     //need to use dailyinfo
@@ -94,8 +94,8 @@ function returnAnnual(portfolio, stocksData) {
     let returns = {};
     portfolio.securities.forEach((stock) => {
         const stockReturn =
-            Number(stocksData[namesToSymbols[stock.name]][endDate]["4. close"])
-            / Number(stocksData[namesToSymbols[stock.name]][startDate]["4. close"]);
+            Number(stocksData[namesToSymbols[stock.name]][endDate]["4. close"]) /
+            Number(stocksData[namesToSymbols[stock.name]][startDate]["4. close"]);
 
         returns[stock.name] = stockReturn ** (1 / yearDif) - 1;
     });
@@ -112,3 +112,5 @@ function getCorrelationKey(stock1, stock2) {
 
 exports.standardDeviationAndCorrelation = standardDeviationAndCorrelation;
 exports.sharpeRatioStocks = sharpeRatioStocks;
+exports.getCorrelationKey = getCorrelationKey;
+exports.returnAnnual = returnAnnual;
