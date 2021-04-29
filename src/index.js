@@ -95,7 +95,7 @@ console.log(debtEquityResults);
 
 
 console.log("\n**************************\n      PORTFOLIO OPTIMIZATION\n");
-const portfolioOptimizationResult = portfolioOptimization.getPortfolioOptimization(portfolioDivers, stocksData);
+const portfolioOptimizationResult = portfolioOptimization.getMaximisedValue(portfolioDivers, stocksData);
 console.log(portfolioOptimizationResult);
 // HELPER FUNCTIONS :)
 
